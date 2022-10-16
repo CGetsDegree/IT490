@@ -18,13 +18,13 @@ $email = $_POST["Email"];
         $_SESSION["password"] = $password;
         $_SESSION["message"] = "Newby";
 	//RMQ message to DB Queue
-	header("refresh:1; url = 'djmvClient.php'");
+	header("refresh:1; url = 'testRabbitMQClient.php'");
 
 //MySQL access
 $host = "localhost";
-$user = "mk694";
-$pass = "testmk694";
-$dbname = "userlogin";
+$user = "test";
+$pass = "abc123";
+$dbname = "user";
 
 $con = mysqli_connect($host, $user, $pass, $dbname);
 
