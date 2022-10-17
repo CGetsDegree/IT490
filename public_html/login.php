@@ -16,7 +16,7 @@
         <?php
         if (!empty($_GET["info"])){
         	$info = $_GET["info"];
-        	if ($info == "badcredentials"){
+        	if ($info["message"] == "No Users Match Username"){
         		echo "BAD CREDENTIALS. TRY AGAINS. <br><br>";
         	}
         }
