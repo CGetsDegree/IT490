@@ -3,12 +3,11 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('mysqlconnect.php');
+
 
 function doLogin($username,$password)
 {
-	$login = new loginDB();
-	return $login->validateLogin($username, $password);
+	return true;
 }
 
 function requestProcessor($request)

@@ -25,17 +25,34 @@ function validateLogin($username, $password) {
     			if ($row["password"] == $pw)
 			{
 				echo "passwords match for $username".PHP_EOL;
-				return array("returnCode" => '1', 'message'=>"Passwords Match");// password match
-				return true;
+				return array("returnCode" => '1', 'message'=>"Passwords Match"); // password match
+				
 			}
 			else {
-				return false;
+				return array("returnCode" => '0', 'message'=>"Password Does Not Match");
 			}
 			}
 		}
 	}
 }
+function requestProcessor($request)
+{
+  echo "received request".PHP_EOL;
+  var_dump($request);
+  if(!isset($request['type']))
+  {
+    return "ERROR: unsupported message type";
+  }
+  switch ($request['type'])
+  {
+    case "login":
+      return validateLogin($request['username'],$request['password']);
+    case "validate_session":
+      return doValidate($request['sessionId']);
+  }
+  return array("returnCode" => '0', 'message'=>"Server received request and processed");
+}
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+$server = new rabbitMQServer("testRabbitMQ.ini","dbServer");
 $server->process_requests('requestProcessor');
 ?>
