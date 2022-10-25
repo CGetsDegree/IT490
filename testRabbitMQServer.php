@@ -3,15 +3,31 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require_once('login.php.inc');
+require_once('mysqlconnect.php');
 
 function doLogin($username,$password)
 {
-    // lookup username in database
-    // check password
-    $login = new loginDB();
-    return $login->validateLogin($username,$password);
-    //return false if not valid
+    $connection = dbconnection();
+    $query = "SELECT * FROM users WHERE username = '$username'";
+    $result = $connection->query($query);
+    if($result){
+    	if($result->num_rows == 0) {
+    		return false;
+    	}
+    	else {
+    		while ($row = $result->fetch_assoc()) {
+    			if ($row["password"] == $pw)
+			{
+				echo "passwords match for $username".PHP_EOL;
+				return array("returnCode" => '1', 'message'=>"Passwords Match");// password match
+				return true;
+			}
+			else {
+				return false;
+			}
+			}
+		}
+	}
 }
 
 function requestProcessor($request)
