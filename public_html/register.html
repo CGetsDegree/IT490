@@ -3,8 +3,8 @@
 	<body>
 		<div id="failure"></div>
 		<div>
-			<form id="login">
-				<h4>Log In</h4>
+			<form id="register">
+				<h4>Register</h4>
 				<table style="text-align: left;">
                     			<tr><th>Username:</th><td><input type="text" id="username" name="username" size="16" required></td></tr>
                     			<tr><th>Password:</th><td><input type="password" id="password" name="password" size="16" required></td></tr>
@@ -35,7 +35,7 @@ body {
 </style>
 
 <script>
-let form=document.querySelector("#login");
+let form=document.querySelector("#register");
 let butt=document.querySelector("#submit");
 let failure=document.querySelector("#failure");
 butt.addEventListener('click',(e)=>{
@@ -45,7 +45,7 @@ butt.addEventListener('click',(e)=>{
 
 async function validate()={
 	let fd=new FormData(form);
-	fd.append("type","login");
+	fd.append("type","register");
 	try{
 		let res=await fetch('uservalidate.php', {
 			method:"POST",

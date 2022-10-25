@@ -1,7 +1,19 @@
 <!DOCTYPE html>
 <html>
     <body>
-        <div id="failure"><h1>Failed to log in.</h1></div>
+        <div id="failure"<?php
+        if (!empty($_POST["message"])){
+                if ($_POST["message"] == "BadCredentials"){
+                        echo "";
+		}
+		else{
+			echo "hidden";
+		}
+	}
+	else{
+		echo"hidden";
+	}
+?>><h1>Failed to log in.</h1></div>
         <div id="loginform">
             <form id="loginForm" action="home.php" method="post">
                 <h4>Log In</h4>
@@ -12,21 +24,11 @@
                 <input name="submit" type="submit" value="Submit">
             </form>
         </div>
-        
-        <?php
-        if (!empty($_GET["info"])){
-        	$info = $_GET["info"];
-        	if ($info["message"] == "No Users Match Username"){
-        		echo "BAD CREDENTIALS. TRY AGAINS. <br><br>";
-        	}
-        }
-        ?>
     </body>
 </html>
 
 <style>
 #failure{
-  visibility:hidden;
   border-radius:20px;
   padding:2px;
   padding-left:10px;
