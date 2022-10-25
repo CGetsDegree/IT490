@@ -3,19 +3,15 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require_once('login.php.inc');
 
-$mydb = new mysqli('127.0.0.1','kepsin','12345','IT490');
 
-if ($mydb->errno != 0)
-{
-	echo "failed to connect to database: ". $mydb->error . PHP_EOL;
-	exit(0);
-}
 echo "successfully connected to database" . PHP_EOL;
 function validateLogin($username, $password) {
     $connection = dbconnection();
     $query = "SELECT * FROM users WHERE username = '$username'";
     $result = $connection->query($query);
+    echo $result;
     if($result){
     	if($result->num_rows == 0) {
     		return false;
@@ -35,6 +31,7 @@ function validateLogin($username, $password) {
 		}
 	}
 }
+
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
@@ -46,7 +43,7 @@ function requestProcessor($request)
   switch ($request['type'])
   {
     case "login":
-      return validateLogin($request['username'],$request['password']);
+      return doLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
   }
