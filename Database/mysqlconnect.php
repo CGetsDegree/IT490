@@ -21,12 +21,14 @@ function requestProcessor($request)
       return validateLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
+    case "register":
+    	return validateRegister($request['username'],$request['password']);
   }
   return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
+$server = new rabbitMQServer("testRabbitMQ.ini","dbServer");
 echo "server started";
 $server->process_requests('requestProcessor');
 ?>
