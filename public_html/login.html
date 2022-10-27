@@ -1,7 +1,9 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
 <html>
 	<div id="navigation"></div>
+	<div id="failure"></div>
 	<body>
-		<div id="failure"></div>
 		<div>
 			<form id="login">
 				<h4>Log In</h4>
@@ -9,14 +11,14 @@
                     			<tr><th>Username:</th><td><input type="text" id="username" name="username" size="16" required></td></tr>
                     			<tr><th>Password:</th><td><input type="password" id="password" name="password" size="16" required></td></tr>
                			</table>
-				<button name="submit" id="submit">Submit</button>
 			</form>
+		    <button onclick="validate()" name="submit" id="submit">Submit</button>
 		</div>
 	</body>
 </html>
 
 <style>
-#register{
+#login{
   border-radius:20px;
   padding:2px;
   padding-left:10px;
@@ -38,28 +40,28 @@ body {
 let form=document.querySelector("#login");
 let butt=document.querySelector("#submit");
 let failure=document.querySelector("#failure");
-butt.addEventListener('click',(e)=>{
-	e.preventDefault;
-	validate();
-});
 
-async function validate()={
+async function validate(){
 	let fd=new FormData(form);
 	fd.append("type","login");
+	console.log("Logging in");
 	try{
-		let res=await fetch('uservalidate.php', {
+		let response=await fetch('uservalidate.php', {
 			method:"POST",
 			body: fd
 		});
-		let result=await res.json();
-
-		showMessage(result.message, res.status==200?"success":"error");
+		let result=await response.json();
+		console.log(result.message);
+		showMessage(result.message, response.status==200?"success":"error");
+		if (response.status==200){
+			location.href="home.html";
+		}
 	}catch(error){
 		showMessage(error.message,"error");
 	}
 }
 
 function showMessage(message,result){
-	failure.innerHTML="div class='alert alert-"+result+"'>"+message+"</div>";
+	failure.innerHTML="<div class='alert alert-"+result+"'>"+message+"</div>";
 }
 </script>

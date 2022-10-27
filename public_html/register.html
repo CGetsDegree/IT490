@@ -35,31 +35,32 @@ body {
 </style>
 
 <script>
-let form=document.querySelector("#register");
+let form=document.querySelector("#login");
 let butt=document.querySelector("#submit");
 let failure=document.querySelector("#failure");
-butt.addEventListener('click',(e)=>{
-	e.preventDefault;
-	validate();
-});
 
-async function validate()={
-	let fd=new FormData(form);
-	fd.append("type","register");
-	try{
-		let res=await fetch('uservalidate.php', {
-			method:"POST",
-			body: fd
-		});
-		let result=await res.json();
-
-		showMessage(result.message, res.status==200?"success":"error");
-	}catch(error){
-		showMessage(error.message,"error");
-	}
+async function validate(){
+        let fd=new FormData(form);
+        fd.append("type","register");
+        console.log("Trying registration");
+        try{
+                let response=await fetch('uservalidate.php', {
+                        method:"POST",
+                        body: fd
+                });
+                let result=await response.json();
+                console.log(result.message);
+                showMessage(result.message, response.status==200?"success":"error");
+                if (response.status==200){
+                        location.href="home.html";
+                }
+        }catch(error){
+                showMessage(error.message,"error");
+        }
 }
 
 function showMessage(message,result){
-	failure.innerHTML="div class='alert alert-"+result+"'>"+message+"</div>";
+        failure.innerHTML="<div class='alert alert-"+result+"'>"+message+"</div>";
 }
+
 </script>
