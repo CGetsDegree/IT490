@@ -5,7 +5,7 @@ private $logindb;
 
 public function __construct()
 	{
-		$this->logindb = new mysqli("127.0.0.1","lucast","test123","IT490");
+		$this->logindb = new mysqli("127.0.0.1","kepsin","12345","IT490");
 
 		if ($this->logindb->connect_errno != 0)
 		{
@@ -15,7 +15,7 @@ public function __construct()
 		echo "correctly connected to database".PHP_EOL;
 	}
 
-	public function validateLogin($username,$password)
+public function doLogin($username,$password)
 	{
 		$un = $this->logindb->real_escape_string($username);
 		$pw = $this->logindb->real_escape_string($password);
