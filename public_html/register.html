@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
 <html>
 	<div id="navigation"></div>
 	<body>
@@ -9,8 +11,8 @@
                     			<tr><th>Username:</th><td><input type="text" id="username" name="username" size="16" required></td></tr>
                     			<tr><th>Password:</th><td><input type="password" id="password" name="password" size="16" required></td></tr>
                			</table>
-				<button name="submit" id="submit">Submit</button>
 			</form>
+			<button onclick="validate()" name="submit" id="submit">Submit</button>
 		</div>
 	</body>
 </html>
@@ -35,7 +37,7 @@ body {
 </style>
 
 <script>
-let form=document.querySelector("#login");
+let form=document.querySelector("#register");
 let butt=document.querySelector("#submit");
 let failure=document.querySelector("#failure");
 
@@ -48,11 +50,12 @@ async function validate(){
                         method:"POST",
                         body: fd
                 });
+                console.log("Here");
                 let result=await response.json();
-                console.log(result.message);
-                showMessage(result.message, response.status==200?"success":"error");
-                if (response.status==200){
-                        location.href="home.html";
+                console.log(result);
+                showMessage(result.message, result.returnCode=="1"?"success":"error");
+                if (result.returnCode=="1"){
+                        location.href="login.html";
                 }
         }catch(error){
                 showMessage(error.message,"error");
