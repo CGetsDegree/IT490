@@ -1,14 +1,11 @@
 #!/usr/bin/php
 <?php
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('../path.inc');
+require_once('../get_host_info.inc');
+require_once('../rabbitMQLib.inc');
+require_once('Connection.php');
+require_once('rFunctions.inc');
 
-
-function doLogin($username,$password)
-{
-	return true;
-}
 
 function requestProcessor($request)
 {
@@ -21,18 +18,17 @@ function requestProcessor($request)
   switch ($request['type'])
   {
     case "login":
-      return doLogin($request['username'],$request['password']);
+      return validateLogin($request['username'],$request['password']);
     case "validate_session":
       return doValidate($request['sessionId']);
+    case "register":
+    	return validateRegister($request['username'],$request['password']);
   }
   return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
-$server = new rabbitMQServer("testRabbitMQ.ini","testServer");
 
-echo "testRabbitMQServer BEGIN".PHP_EOL;
+$server = new rabbitMQServer("testRabbitMQ.ini","dbServer");
+echo "server started";
 $server->process_requests('requestProcessor');
-echo "testRabbitMQServer END".PHP_EOL;
-exit();
 ?>
-
