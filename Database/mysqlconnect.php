@@ -23,6 +23,8 @@ function requestProcessor($request)
       return createSession($request['sessionId']);
     case "validate_session":
       return validateSeassion($request['sessionId']);
+    case "logout":
+      return stopSeassion($request['sessionId']);
     case "register":
     	return validateRegister($request['username'],$request['password']);
   }

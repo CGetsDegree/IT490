@@ -77,4 +77,22 @@ function validateSession($sessionId) {
 	}
 	return json_encode(array("returnCode" => '0', 'message' => "SessionID is invalid"));
 }
+
+function stopSession($sessionId) {
+	$logindb = databaseConnect();
+	$session = $logindb->real_escape_string($sessionId);
+	$query = "select * from sessions where sessionsID = '$session'";
+	$response = $logindb->query($query);
+	while ($row = $response->fetch_assoc()) {
+		if ($row["sessionID"] == $session) {
+			$delete = "delete from sessions where sessionID='$session'";
+		f($logindb->query($delete) === TRUE) {
+			return json_encode(array("returnCode" => '1', 'message' => "Logout successfull"));
+		} 
+		return json_encode(array("returnCode" => '0', 'message' => "already logged out"));
+	}
+	
+	}
+	return json_encode(array("returnCode" => '0', 'message' => "logout incomplete something went wrong"));
+}	
 ?>
