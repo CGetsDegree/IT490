@@ -14,13 +14,8 @@ if ($_POST){
       $request['username'] = $username;
       $request['password'] = $password;
       $response = $client->send_request($request);
-      if ($response["returnCode"] == "1"){
-      	echo "Successfully logged in! Welcome $username!";
-      }
-      else{
-	      header('Content-Type: application/json');
-	      echo json_encode($response);
-      }
+      header("Content-Type: application/json");
+      echo $response;
     }
     else{
     	header("Location:login.php");

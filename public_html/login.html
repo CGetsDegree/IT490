@@ -50,10 +50,11 @@ async function validate(){
 			method:"POST",
 			body: fd
 		});
+		console.log("Here");
 		let result=await response.json();
-		console.log(result.message);
-		showMessage(result.message, response.status==200?"success":"error");
-		if (response.status==200){
+		console.log(result);
+		showMessage(result.message, result.returnCode=="1"?"success":"error");
+		if (result.returnCode=="1"){
 			location.href="home.html";
 		}
 	}catch(error){
