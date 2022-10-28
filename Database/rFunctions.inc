@@ -16,12 +16,14 @@ function validateLogin($username,$password)
 			if ($row["password"] == $pw)
 			{
 				echo "passwords match for $username".PHP_EOL;
-				return array("returnCode" => '1', 'message'=>"Passwords Match");// password match
+				return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match"));// password match
 			}
 			echo "passwords did not match for $username".PHP_EOL;
 		}
-		return array("returnCode" => '0', 'message'=>"No Users Match Username");//no users matched username
+		
+		return json_encode(array("returnCode" => '0', 'message'=>"No Users Match Username"));//no users matched username
 	}
+	
 function validateRegister($username,$password)
 	{
 		$logindb = databaseConnect();
@@ -36,13 +38,43 @@ function validateRegister($username,$password)
 			if ($row["username"] == $un)
 			{
 				echo "username already exist".PHP_EOL;
-				return array("returnCode" => '0', 'message'=>"Username already exist try again");// password match
+				return json_encode(array("returnCode" => '0', 'message'=>"Username already exist try again"));// password match
 			}
 		}
-		$insert = "instert into users values(0, ".'$un'.",". '$pw'.")";
+		$insert = "insert into users values(0, '$un', '$pw')";
 		if ($logindb->query($insert) === TRUE) {
-			return array("returnCode" => '1', 'message'=>"Username and password accepted");
+			return json_encode(array("returnCode" => '1', 'message'=>"Username and password accepted"));
 		}
-		return array("returnCode" => '0', 'message'=>"something went wrong try again"); 
+		return json_encode(array("returnCode" => '0', 'message'=>"something went wrong try again")); 
 	}
+
+function createSession($sessionId) {
+	$logindb = databaseConnect();
+	$session = $logindb->real_escape_string($sessionId);
+	$query = "select * from sessions where sessionsID = '$session'";
+	$response = $logindb->query($query);
+	while ($row = $response->fetch_assoc()) {
+		if ($row["sessionID"] == $session) {
+			return json_encode(array("returnCode" => '0', 'message' => "SessionID already exist"));
+		} 
+	}
+	$insert = "insert into sessions (sessionID, creationTime, expireTime) values('$session', CURRENT_TIME(), ADDTIME(CURRENT_TIME(), 020000))";
+	if($logindb->query($insert) === TRUE) {
+		return json_encode(array("returnCode" => '1', 'message' => "SessionID is created"));
+	}
+	return json_encode(array("returnCode" => '0', 'message' => "SessionID is invalid"));
+}	
+	
+function validateSession($sessionId) {
+	$logindb = databaseConnect();
+	$session = $logindb->real_escape_string($sessionId);
+	$query = "select * from sessions where sessionsID = '$session'";
+	$response = $logindb->query($query);
+	while ($row = $response->fetch_assoc()) {
+		if ($row["sessionID"] == $session) {
+			return json_encode(array("returnCode" => '1', 'message' => "SessionID is valid"));
+		} 
+	}
+	return json_encode(array("returnCode" => '0', 'message' => "SessionID is invalid"));
+}
 ?>
