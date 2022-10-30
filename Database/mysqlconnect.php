@@ -5,7 +5,9 @@ require_once('../get_host_info.inc');
 require_once('../rabbitMQLib.inc');
 require_once('Connection.php');
 require_once('rFunctions.inc');
+include('../sendLog.php');
 
+echo SendToLogger("DB Server Startup");
 
 function requestProcessor($request)
 {
