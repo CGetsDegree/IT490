@@ -6,7 +6,7 @@ require_once('rabbitMQLib.inc');
 require("apiStuff.php");
 include('sendLog.php');
 
-echo SendToLogger("DB Server Startup");
+echo SendToLogger("API Server Startup");
 
 function requestProcessor($request)
 {
