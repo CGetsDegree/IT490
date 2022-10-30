@@ -1,7 +1,9 @@
 <?php
 
 require_once('Connection.php');
-
+/*
+* returns the userid from the list of users.
+*/
 function returnUser($username, $db) {
 	$query = "select * from users where username = '$username'";
 	$result = $db->query($query);
@@ -78,7 +80,7 @@ function validateRegister($username,$password)
 function createSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session'";
+	$query = "select * from sessions where sessionID = '$session'";
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
@@ -311,6 +313,9 @@ function changeRating($userid, $movieid, $rating) {
 	return json_encode(array("returnCode" => '0', 'message' => "rating not changed"));
 }
 
+/*
+* Gets the rating and gives it to the webserver
+*/
 function getRating($userid, $movieid) {
 	$sarray = array();
 	$logindb = databaseConnect();

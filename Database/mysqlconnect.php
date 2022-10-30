@@ -21,7 +21,7 @@ function requestProcessor($request)
       return validateLogin($request['username'],$request['password']);
     case "validate_session":
       return validateSeassion($request['sessionId']);
-    case "logout":S
+    case "logout":
       return stopSeassion($request['sessionId']);
     case "register":
     	return validateRegister($request['username'],$request['password']);
