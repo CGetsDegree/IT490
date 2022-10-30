@@ -19,7 +19,14 @@ function validateLogin($username,$password)
 			if ($row["password"] == $pw)
 			{
 				echo "passwords match for $username".PHP_EOL;
-				return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match")); // password matched with username, allows login
+				$sessionid = createSession(rand(100000, 99999999));
+				if ($sessionid != NULL) {
+					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionId'=>'$sessionid'); // password matched with username, allows login
+				}
+				else {
+					return json_encode(array("returnCode" => '0', 'message'=>"Error generating session"));
+				}
+				
 			}
 			echo "passwords did not match for $username".PHP_EOL; //passwords didn't match, continues through list of users.
 		}
@@ -65,14 +72,13 @@ function createSession($sessionId) {
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
-			return json_encode(array("returnCode" => '0', 'message' => "SessionID already exist")); //sessionID already exist and that shouldn't be
+			return NULL; //sessionID already exist and that shouldn't be
 		} 
 	}
 	$insert = "insert into sessions (sessionID, creationTime, expireTime) values('$session', CURRENT_TIME(), ADDTIME(CURRENT_TIME(), 020000))"; //creates a new sessionID in tables sessions
 	if($logindb->query($insert) === TRUE) { //checks to make sure it worked
-		return json_encode(array("returnCode" => '1', 'message' => "SessionID is created")); //returns if it did work
-	}
-	return json_encode(array("returnCode" => '0', 'message' => "SessionID cannot be created")); //returns if it didn't work
+		return $sessionId;
+	return NULL;
 }	
 	
 /*
