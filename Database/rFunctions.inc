@@ -2,6 +2,16 @@
 
 require_once('Connection.php');
 
+function returnUser($username, $db) {
+	$query = "select * from users where username = '$username'";
+	$result = $db->query($query);
+	while ($row = $result->fetch_assoc()) {
+		if($row["username"] == $username) {
+			return $row['id'];
+		}
+	}
+	return null;
+}
 /*
 * Goes through the database and looks to see if the login credentials are valid for login.
 */
@@ -125,7 +135,11 @@ function stopSession($sessionId) {
 */
 function addService($userid, $serviceid) {
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	$usid = returnUser($userid, $logindb);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$sid = $logindb->real_escape_string($serviceid);
 	$query = "select * from service_list where id = '$uid' and serviceID = '$sid'";
 	$select = $logindb->query($query);
@@ -147,7 +161,10 @@ function addService($userid, $serviceid) {
 */
 function removeService($userid, $serviceid) {
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$sid = $logindb->real_escape_string($serviceid);
 	$query = "select * from service_list where id = '$uid' and serviceID = '$sid'";
 	$select = $logindb->query($query);
@@ -169,7 +186,10 @@ function removeService($userid, $serviceid) {
 function getServices($userid) {
 	$sarray = array();
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$query = "select * from service_list where id = '$uid'";
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
@@ -185,7 +205,10 @@ function getServices($userid) {
 */
 function addMovie($userid, $movieid) {
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$mid = $logindb->real_escape_string($movieid);
 	$query = "select * from watch_list where id = '$uid' and movieID = '$mid'";
 	$select = $logindb->query($query);
@@ -207,7 +230,10 @@ function addMovie($userid, $movieid) {
 */
 function removeMovie($userid, $movieid) {
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$mid = $logindb->real_escape_string($serviceid);
 	$query = "select * from watch_list where id = '$uid' and movieID = '$mid'";
 	$select = $logindb->query($query);
@@ -229,7 +255,10 @@ function removeMovie($userid, $movieid) {
 function getMovies($userid) {
 	$sarray = array();
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$query = "select * from watch_list where id = '$uid'";
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
@@ -256,7 +285,10 @@ function addRating($userid, $movieid, $rating, $db) {
 */
 function changeRating($userid, $movieid, $rating) {
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$mid = $logindb->real_escape_string($movieid);
 	$rate = $logindb->real_escape_string($rating);
 	$query = "select * from ratings where id = '$uid' and movieID = '$mid' and ratings = '$rate'";
@@ -282,7 +314,10 @@ function changeRating($userid, $movieid, $rating) {
 function getRating($userid, $movieid) {
 	$sarray = array();
 	$logindb = databaseConnect();
-	$uid = $logindb->real_escape_string($userid);
+	if ($usid == NULL) {
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$uid = $logindb->real_escape_string($usid);
 	$mid = $logindb->real_escape_string($movieid);
 	$query = "select * from ratings where id = '$uid' and movieID = '$mid'";
 	$select = $logindb->query($query);

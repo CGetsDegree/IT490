@@ -21,26 +21,26 @@ function requestProcessor($request)
       return validateLogin($request['username'],$request['password']);
     case "validate_session":
       return validateSeassion($request['sessionId']);
-    case "logout":
+    case "logout":S
       return stopSeassion($request['sessionId']);
     case "register":
     	return validateRegister($request['username'],$request['password']);
     case "add_service_list":
-    	return addServices($request['id'], $request['serviceID']);
+    	return addServices($request['username'], $request['serviceID']);
     case "remove_service_list":
-    	return removeService($request['id'], $request['serviceID']);
+    	return removeService($request['username'], $request['serviceID']);
     case "get_service_list":
-    	return getServices($request['id']);
+    	return getServices($request['username']);
     case "add_movie_list":
-    	return addServices($request['id'], $request['movieID']);
+    	return addServices($request['username'], $request['movieID']);
     case "remove_movie_list":
-    	return removeServices($request['id'], $request['movieID']);
+    	return removeServices($request['username'], $request['movieID']);
     case "get_movie_list":
-    	return getMovies($request['id']);
+    	return getMovies($request['username']);
     case "change_movie_rating":
-    	return changeRating($request['id'], $request['movieID'], $request['rating']);
+    	return changeRating($request['username'], $request['movieID'], $request['rating']);
     case "get_movie_rating":
-    	return getRating($request['id'], $request['movieID']);
+    	return getRating($request['username'], $request['movieID']);
     
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));
