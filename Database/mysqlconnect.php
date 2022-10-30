@@ -22,9 +22,9 @@ function requestProcessor($request)
     case "login":
       return validateLogin($request['username'],$request['password']);
     case "validate_session":
-      return validateSeassion($request['sessionId']);
-    case "logout":S
-      return stopSeassion($request['sessionId']);
+      return validateSession($request['sessionId']);
+    case "logout":
+      return stopSession($request['sessionId']);
     case "register":
     	return validateRegister($request['username'],$request['password']);
     case "add_service_list":

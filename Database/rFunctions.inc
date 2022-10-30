@@ -31,7 +31,8 @@ function validateLogin($username,$password)
 				echo "passwords match for $username".PHP_EOL;
 				$sessionid = createSession(rand(100000, 99999999));
 				if ($sessionid != NULL) {
-					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionId'=>'$sessionid')); // password matched with username, allows login
+					echo "sessions id created".PHP_EOL;
+					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>'$sessionid')); // password matched with username, allows login
 				}
 				else {
 					return json_encode(array("returnCode" => '0', 'message'=>"Error generating session")); //session wasn't generated correctly. Error
@@ -78,7 +79,7 @@ function validateRegister($username,$password)
 function createSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session'";
+	$query = "select * from sessions where sessionID = '$session'";
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
