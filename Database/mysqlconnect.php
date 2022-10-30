@@ -30,7 +30,7 @@ function requestProcessor($request)
     case "remove_service_list":
     	return removeService($request['id'], $request['serviceID']);
     case "get_service_list":
-    	return return getServices($request['id']);
+    	return getServices($request['id']);
     case "add_movie_list":
     	return addServices($request['id'], $request['movieID']);
     case "remove_movie_list":

@@ -78,6 +78,7 @@ function createSession($sessionId) {
 	$insert = "insert into sessions (sessionID, creationTime, expireTime) values('$session', CURRENT_TIME(), ADDTIME(CURRENT_TIME(), 020000))"; //creates a new sessionID in tables sessions
 	if($logindb->query($insert) === TRUE) { //checks to make sure it worked
 		return $sessionId;
+	}
 	return NULL;
 }	
 	
@@ -135,7 +136,7 @@ function addService($userid, $serviceid) {
 	}
 	$insert = "insert into service_list values('$uid', '$sid')";
 	if ($logindb->query($insert) === TRUE) {
-		return json_encode(array("returnCode" => '1', 'message' = "service successfully added"));
+		return json_encode(array("returnCode" => '1', 'message' => "service successfully added"));
 		
 	}
 	return json_encode(array("returnCode" => '0', 'message' => "no service added. Something went wrong"));
@@ -154,7 +155,8 @@ function removeService($userid, $serviceid) {
 		if($row["id"] == $uid && $row["serviceID"] == $sid) {
 			$insert = "insert into service_list values('$uid', '$sid')";
 			if ($logindb->query($insert) === TRUE) {
-				return json_encode(array("returnCode" => '1', 'message' = "service successfully removed"));			
+				return json_encode(array("returnCode" => '1', 'message' => "service successfully removed"));			
+			}
 		}
 	}
 		
@@ -194,7 +196,7 @@ function addMovie($userid, $movieid) {
 	}
 	$insert = "insert into watch_list values('$uid', '$mid')";
 	if ($logindb->query($insert) === TRUE) {
-		return json_encode(array("returnCode" => '1', 'message' = "service successfully added"));
+		return json_encode(array("returnCode" => '1', 'message' => "service successfully added"));
 		
 	}
 	return json_encode(array("returnCode" => '0', 'message' => "no service added. Something went wrong"));
@@ -213,7 +215,8 @@ function removeMovie($userid, $movieid) {
 		if($row["id"] == $uid && $row["movieID"] == $mid) {
 			$insert = "insert into watch_list values('$uid', '$mid')";
 			if ($logindb->query($insert) === TRUE) {
-				return json_encode(array("returnCode" => '1', 'message' = "movie successfully removed"));			
+				return json_encode(array("returnCode" => '1', 'message' => "movie successfully removed"));			
+			}
 		}
 	}
 		
@@ -277,7 +280,7 @@ function changeRating($userid, $movieid, $rating) {
 }
 
 function getRating($userid, $movieid) {
-	sarray = array();
+	$sarray = array();
 	$logindb = databaseConnect();
 	$uid = $logindb->real_escape_string($userid);
 	$mid = $logindb->real_escape_string($movieid);
@@ -286,6 +289,7 @@ function getRating($userid, $movieid) {
 	while ($row = $select->fetch_assoc()) {
 		if($row["id"] == $uid && $row["movieID"] == $mid) {
 		return json_encode(array("returnCode" => '1', 'message' => "rating achieved", 'rating'=>$row["rating"])); //returns the rating for the movie
+		}
 	}
 	return json_encode(array("returnCode" => '0', 'message' => "failed to get a rating", 'serviceArray'=>$sarray)); 
 }
