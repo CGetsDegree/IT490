@@ -19,14 +19,29 @@ function requestProcessor($request)
   {
     case "login":
       return validateLogin($request['username'],$request['password']);
-    case "create_session":
-      return createSession($request['sessionId']);
     case "validate_session":
       return validateSeassion($request['sessionId']);
-    case "logout":
+    case "logout":S
       return stopSeassion($request['sessionId']);
     case "register":
     	return validateRegister($request['username'],$request['password']);
+    case "add_service_list":
+    	return addServices($request['username'], $request['serviceID']);
+    case "remove_service_list":
+    	return removeService($request['username'], $request['serviceID']);
+    case "get_service_list":
+    	return getServices($request['username']);
+    case "add_movie_list":
+    	return addServices($request['username'], $request['movieID']);
+    case "remove_movie_list":
+    	return removeServices($request['username'], $request['movieID']);
+    case "get_movie_list":
+    	return getMovies($request['username']);
+    case "change_movie_rating":
+    	return changeRating($request['username'], $request['movieID'], $request['rating']);
+    case "get_movie_rating":
+    	return getRating($request['username'], $request['movieID']);
+    
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));
 }
