@@ -3,6 +3,7 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
+require("apiStuff.php")
 
 function requestProcessor($request)
 {
@@ -15,14 +16,20 @@ function requestProcessor($request)
   switch ($request['type'])
   {
     case "search":
-      return doLogin($request['username'],$request['password']);
+    	if(isset($request["page"])){
+    		return json_encode(searchMovies($request['query'],$request['page']));
+    	}
+    	else{
+    		return json_encode(searchMovies($request['query']));
+    	}
+     
     case "get_details":
-      return doValidate($request['sessionId']);
+      return getMovieDetails($request['id']);
     case "get_recommendation":
-      return doValidate($request['sessionId']);
-    case "get_watchlist":
-      return doValidate($request['sessionId']);  }
-  return array("returnCode" => '0', 'message'=>"Server received request and processed");
+      return getRecommended($request['id']);
+    //case "get_watchlist":
+      //return doValidate($request['sessionId']);  }
+  //return array("returnCode" => '0', 'message'=>"Server received request and processed");
 }
 
 $server = new rabbitMQServer("testRabbitMQ.ini","dmz");
