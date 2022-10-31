@@ -1,11 +1,11 @@
-#!/usr/bin/php
 <?php
 //$url = "https://api.themoviedb.org/3/search/movie?api_key=$API_KEY&language=en-US&query=Fight%20Club";
 
 //$response = searchMovies("Avengers");
 //$output = array();
 //searchMovies("Rogue One");
-
+//$movies = array(11, 436270, 550, 1919);
+//displayWatchlist($movies);
 //echo $result;
 //$output = json_decode($response, true);
 
@@ -145,6 +145,22 @@ function searchMovies($query, $page=1){
 	}
 	print_r($info);
 	return $info;
+}
+
+function displayWatchlist($movies = array()){
+	$list = array();
+	foreach($movies as $movie){
+		$details = getMovie($movie);
+		$list[] = array(
+			"id" => $details["id"],
+			"title" => $details["title"],
+			"poster_path" => $details["poster_path"],
+			"release_date" => $details["release_date"],
+			"genres"=>$details["genres"],
+			"production_companies"=>$details["production_companies"]);
+	}
+	print_r($list);
+	return $list;
 }
 
 function getRecommended($id){
