@@ -7,12 +7,12 @@ require_once('rabbitMQLib.inc');
 function sendDB($message) {
 	$client = new rabbitMQClient('testRabbitMQ.ini','testServer');
 	$response = $client->send_request($message);
-	return $message;
+	return $response;
 }
 function sendAPI($message) {
 	$client = new rabbitMQClient('testRabbitMQ.ini','dmz');
 	$response = $client->send_request($message);
-	return $message;
+	return $response;
 }
 function sendLog($message) {
 	$client = new rabbitMQClient('testRabbitMQ.ini', 'Logger');
