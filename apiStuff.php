@@ -1,7 +1,7 @@
 <?php
 //$url = "https://api.themoviedb.org/3/search/movie?api_key=$API_KEY&language=en-US&query=Fight%20Club";
 
-//$response = searchMovies("Avengers");
+//$response = getServices(11);
 //$output = array();
 //searchMovies("Rogue One");
 //$movies = array(11, 436270, 550, 1919);
@@ -10,6 +10,8 @@
 //$output = json_decode($response, true);
 
 //print_r($response);
+
+require_once('rabbitFunctions.php');
 
 function print_genres($arr){
 	foreach($arr as $items){

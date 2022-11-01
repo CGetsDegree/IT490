@@ -46,3 +46,28 @@
 12:29:21pm:Login: Login successful
 12:29:46pm:Login: Login successful
 12:35:20pm:Login: Login successful
+12:37:38pm:Login: Login successful
+12:40:12pm:Login: Passwords do not match
+12:40:14pm:Login: Usernames do not match
+12:41:30pm:Login: Login successful
+12:42:54pm:Login: Login successful
+12:42:58pm:Sessions: ID is valid, user logged in
+12:43:33pm:Sessions: ID is valid, user logged in
+12:44:20pm:Sessions: ID is valid, user logged in
+12:45:36pm:DB Server Startup
+12:45:39pm:Sessions: ID is valid, user logged in
+12:45:41pm:Sessions: ID is valid, user logged in
+12:45:44pm:Sessions: ID is valid, user logged in
+12:45:57pm:Login: Login successful
+12:46:08pm:Login: Login successful
+12:46:29pm:Login: Login successful
+12:47:29pm:Login: Login successful
+12:47:32pm:Sessions: ID is valid, user logged in
+12:49:24pm:DB Server Startup
+12:49:29pm:Sessions: User logged out
+12:49:32pm:Sessions: Logging out error
+12:49:32pm:Sessions: ID is invalid
+12:49:34pm:Sessions: Logging out error
+12:49:37pm:Sessions: Logging out error
+12:49:39pm:Sessions: ID is invalid
+12:49:45pm:Login: Login successful
