@@ -33,7 +33,7 @@ function validateLogin($username,$password)
 				echo "passwords match for $username".PHP_EOL;
 				$sessionid = createSession(rand(100000, 99999999));
 				if ($sessionid != NULL) {
-					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionId'=>'$sessionid')); // password matched with username, allows login
+					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)); // password matched with username, allows login
 				}
 				else {
 					return json_encode(array("returnCode" => '0', 'message'=>"Error generating session")); //session wasn't generated correctly. Error
@@ -100,7 +100,7 @@ function createSession($sessionId) {
 function validateSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session' AND expireTime > current_time()"; //selects all current sessions that aren't expired
+	$query = "select * from sessions where sessionID = '$session' AND expireTime > current_time()"; //selects all current sessions that aren't expired
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
@@ -117,7 +117,7 @@ function validateSession($sessionId) {
 function stopSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session'";
+	$query = "select * from sessions where sessionID = '$session'";
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
@@ -163,6 +163,7 @@ function addService($userid, $serviceid) {
 */
 function removeService($userid, $serviceid) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
@@ -188,6 +189,7 @@ function removeService($userid, $serviceid) {
 function getServices($userid) {
 	$sarray = array();
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
@@ -207,6 +209,7 @@ function getServices($userid) {
 */
 function addMovie($userid, $movieid) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
@@ -232,6 +235,7 @@ function addMovie($userid, $movieid) {
 */
 function removeMovie($userid, $movieid) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
@@ -256,6 +260,7 @@ function removeMovie($userid, $movieid) {
 */
 function getMovies($userid) {
 	$sarray = array();
+	$usid = returnUser($userid, $logindb);
 	$logindb = databaseConnect();
 	if ($usid == NULL) {
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -268,7 +273,7 @@ function getMovies($userid) {
 			array_push($sarray, $row["movieID"]);
 		}
 	}
-	return json_encode(array("returnCode" => '1', 'message' => "movie list made successful", 'serviceArray'=>$sarray)); //returns an array of movies in the list.
+	return json_encode(array("returnCode" => '1', 'message' => "movie list made successful", 'movieArray'=>$sarray)); //returns an array of movies in the list.
 }
 
 /*
