@@ -1,7 +1,7 @@
 <?php
 //$url = "https://api.themoviedb.org/3/search/movie?api_key=$API_KEY&language=en-US&query=Fight%20Club";
 
-//$response = searchMovies("Avengers");
+$response = getServices(11);
 //$output = array();
 //searchMovies("Rogue One");
 //$movies = array(11, 436270, 550, 1919);
@@ -9,7 +9,8 @@
 //echo $result;
 //$output = json_decode($response, true);
 
-//print_r($response);
+print_r($response);
+require_once('rabbitFunctions.php');
 
 function print_genres($arr){
 	foreach($arr as $items){
@@ -30,6 +31,7 @@ function getServices($id){
 	$result = curl_exec($get_services);
 	curl_close($get_services);
 	$result = json_decode($result,true);
+//	sendLog('API: Return array of');
 	return $result["results"]["US"];
 }
 function getMovie($id){
