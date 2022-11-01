@@ -8,6 +8,8 @@
 				<ul id="movielist">
 				</ul>
 			<button name="add" id="add" onclick="addToWatchlist()">Add To Watchlist</button>
+			<button name="pageP" id="pageP" onclick="prevPage()">Previous</button>
+			<button name="pageN" id="pageN" onclick="nextPage()">Next</button>
 		</div>
 		<div class="half left"><table id="watchlist"></table></div>
 	</body>
@@ -19,21 +21,38 @@ li{
 }
 </style>
 <script>
-	let movielist=document.queryselector("#movielist");
-	let searchbar=document.queryselector("#search");
+	var page=1;
+	let movielist=document.querySelector("#movielist");
+	let searchbar=document.querySelector("#search");
+	let query=searchbar.value;
 	const sessionid=("; "+document.cookie).split("; sessionid=").pop().split(";")[0];
 	async function search(){
 		var fd=new FormData();
-		fd.append("searchquery",searchbar.value);
-		fd.append("type","searchmovies");
+		if (searchbar.value!=""){
+			if (query==""){
+				return false;
+			}
+			else{
+				fd.append("searchquery",query);
+			}
+		}
+		else{
+			fd.append("searchquery",searchbar.value);
+		}
+		if (searchbar.value!=query){
+			query=searchbar.value;
+			page=1;
+		}
+		fd.append("type","search");
 		fd.append("sessionid",sessionid);
+		fd.append("page",page);
 		let response=await fetch("movies.php",{
 			method:"POST",
 			body:fd
 		});
 		let result=response.json();
-		if (result!=null){
-			movielist.empty();
+		if (result.returnCode!="0"){
+			movielist.innerHTML="";
 			for (record in data){
 				movielist.append(
 					'<li id="'+data[record].id+'"><image class="poster" url="'+data[record].poster+'">'+
@@ -43,24 +62,45 @@ li{
 					);
 			}
 		}
+		else{
+			return false;
+		}
+		return true;
+
 	}
+async function prevPage(){
+	if (!searchbar.value!=""){
+		return false;
+	}
+	if (page>1){
+		page--;
+		return await search();
+	}
+
+}
+async function nextPage(){
+        if (!searchbar.value!=""){
+                return false;
+        }
+        page++;
+	if (!await search()){
+		page=1;
+	}
+}
 	async function addToWatchList(){
 		var fd=new FormData();
 		fd.append("type","addToWatchlist");
 		fd.append("sessionid",sessionid);
-		let checked=document.queryselectorall('input[type="checkbox"]:"checked"');
-		let movies='{';
-		for (var mov of checked){
-			movies.append(mov.value+', ');
-		}
-		movies.append('"END"}');
+		let checked=document.querySelectorAll('input[type="checkbox"]:"checked"');
+		let movies = "{"+checked.join(", ")+"}";
 		fd.append("movies",movies);
 
 		let response=await fetch("movies.php",{
                         method:"POST",
                         body:fd
                 });
-                let result=response.json();
+                let result=await response.json();
+		console.log(result);
 	}
 
 </script>
