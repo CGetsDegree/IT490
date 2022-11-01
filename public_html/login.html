@@ -45,12 +45,6 @@ async function validate(){
 	let fd=new FormData(form);
 	fd.append("type","login");
 	let uname=fd.get("username");
-	
-	var cookies=document.cookie.split(';').reduce(
-		(cookies, cookie) => {
-			const [name, val] = cookie.split('=').map(c=>c.trim());
-			if (name=="sessionid") return val;
-		}, {return 0});
 	console.log("Logging in");
 	try{
 		let response=await fetch('uservalidate.php', {
@@ -61,7 +55,8 @@ async function validate(){
 		let result=await response.json();
 		console.log(result);
 		if (result.returnCode=="1"){
-			document.cookie="sessionid="+result.sessionid+";username="+uname+";path='/'";
+			document.cookie="sessionid="+encodeURIComponent(result.sessionid)+";path='/';SameSite=Lax;";
+			document.cookie="username="+uname;
 			location.href="home.html";
 		}
 		showMessage(result.message);

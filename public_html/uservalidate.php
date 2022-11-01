@@ -14,10 +14,11 @@ if ($_POST){
       $request['username'] = $username;
       $request['password'] = $password;
       $response = $client->send_request($request);
-      header("Content-Type: application/json");
       echo $response;
     }
     else{
-    	header("Location:login.php");
+	    $r=array();
+	    $r["message"]="error";
+	    echo json_encode($r);
     }
 ?>
