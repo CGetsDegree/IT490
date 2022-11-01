@@ -50,21 +50,16 @@ li{
 			method:"POST",
 			body:fd
 		});
-		let result=response.json();
-		if (result.returnCode!="0"){
+		let result=await response.json();
 			movielist.innerHTML="";
-			for (record in data){
+			for (record in result){
 				movielist.append(
-					'<li id="'+data[record].id+'"><image class="poster" url="'+data[record].poster+'">'+
-					data[record].title+data[record].releasedate+data[record].company+
-					'<a href="movie?m='+data[record].id+'">See more details</a>'+
-					'<input type="checkbox" value='+data[record].id+'>'
+					'<li id="'+result[record].id+'"><image class="poster" url="'+result[record].poster+'">'+
+					result[record].title+result[record].releasedate+result[record].company+
+					'<a href="movie?m='+result[record].id+'">See more details</a>'+
+					'<input type="checkbox" value='+result[record].id+'>'
 					);
 			}
-		}
-		else{
-			return false;
-		}
 		return true;
 
 	}
