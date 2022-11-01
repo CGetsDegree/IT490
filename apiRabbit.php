@@ -12,6 +12,7 @@ echo SendToLogger("API Server Startup");
 
 function requestProcessor($request)
 {
+  //$request = json_decode($request,true);
   echo "received request".PHP_EOL;
   var_dump($request);
   if(!isset($request['type']))
