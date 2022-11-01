@@ -1,7 +1,7 @@
 <?php
 
 require_once('Connection.php');
-include('../sendLog.php')
+require_once('../sendLog.php');
 
 function returnUser($username, $db) {
 	$query = "select * from users where username = '$username'";
@@ -33,7 +33,7 @@ function validateLogin($username,$password)
 				$sessionid = createSession(rand(100000, 99999999));
 				if ($sessionid != NULL) {
 					SendToLogger('Login: Login successful');
-					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionId'=>'$sessionid')); // password matched with username, allows login
+					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)); // password matched with username, allows login
 				}
 				else {
 					SendToLogger('Login: Error generating session');
@@ -85,7 +85,7 @@ function validateRegister($username,$password)
 function createSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session'";
+	$query = "select * from sessions where sessionID = '$session'";
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
@@ -105,7 +105,7 @@ function createSession($sessionId) {
 function validateSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session' AND expireTime > current_time()"; //selects all current sessions that aren't expired
+	$query = "select * from sessions where sessionID = '$session' AND expireTime > current_time()"; //selects all current sessions that aren't expired
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
@@ -124,7 +124,7 @@ function validateSession($sessionId) {
 function stopSession($sessionId) {
 	$logindb = databaseConnect();
 	$session = $logindb->real_escape_string($sessionId);
-	$query = "select * from sessions where sessionsID = '$session'";
+	$query = "select * from sessions where sessionID = '$session'";
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {

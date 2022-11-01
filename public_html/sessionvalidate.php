@@ -10,7 +10,6 @@ if ($_POST){
       $request['type'] = $rtype;
       $request['sessionid'] = $sessionid;
       $response = $client->send_request($request);
-      header("Content-Type: application/json");
       echo $response;
     }
     else{

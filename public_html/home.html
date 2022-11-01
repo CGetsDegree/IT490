@@ -5,27 +5,26 @@
 	<button name="watchlists" action="watchlists.html">View or Create Watchlists</button>
 	<button name="favorites" action="favorites.html">Favorites</button>
 	<button name="profile" action="goToProfile()">Your Profile</button>
-	<button name="logout" action="logout()">Log Out</button>
+	<button name="logout" onclick="logout()">Log Out</button>
 </html>
 
 <script>
-	const sessionid=document.cookie.split(";").find((r)=>r.startsWith("sessionid="))?.split("=")[1];
-	const username=document.cookie.split(";").find((r)=>r.startsWith("username="))?.split("=")[1];
+	const sessionid=('; '+document.cookie).split('; sessionid=').pop().split(';')[0];
+	const username=('; '+document.cookie).split('; username=').pop().split(';')[0];
+	console.log(sessionid);
+	console.log(username);
 	let sessiondata=new FormData();
 	sessiondata.append("sessionid",sessionid);
-	function validateSession(){
-		if (sessionid==null||username==null){
-			location.href="login.html";
-			return;
-		}
+	async function validateSession(){
 		sessiondata.append("type","validate_session");
+		console.log(sessiondata);
                 try{
                 let response=await fetch('sessionvalidate.php', {
                         method:"POST",
                         body: sessiondata
                 });
                 let result=await response.json();
-		if (result.returnCode!="1"{
+		if (result.returnCode!="1"){
 				document.cookie="sessionid=;username=;path='/'";
 				location.href="login.html";
 			}
@@ -35,13 +34,11 @@
                 }
 
 	}
-	if (sessionid==null){
-		location.href="login.html"
-	}
+	validateSession();
 	function goToProfile(){
-		location.href="profile.html?u="+username;
+		location.href="profile.html?u="+encodeURIComponent(username);
 	}
-	function logout(){
+	async function logout(){
 		sessiondata.delete("type");
 		sessiondata.append("type","logout");
 		try{
