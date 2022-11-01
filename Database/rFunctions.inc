@@ -1,6 +1,8 @@
 <?php
 
 require_once('Connection.php');
+require_once('../rabbitFunctions.php');
+
 /*
 * returns the userid from the list of users.
 */
@@ -33,16 +35,19 @@ function validateLogin($username,$password)
 				echo "passwords match for $username".PHP_EOL;
 				$sessionid = createSession(rand(100000, 99999999));
 				if ($sessionid != NULL) {
+					sendLog('Login: Login successful');
 					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)); // password matched with username, allows login
 				}
 				else {
+					sendLog('Login: Error generating session');
 					return json_encode(array("returnCode" => '0', 'message'=>"Error generating session")); //session wasn't generated correctly. Error
 				}
 				
 			}
+			sendLog('Login: Passwords do not match');
 			echo "passwords did not match for $username".PHP_EOL; //passwords didn't match, continues through list of users.
 		}
-		
+		sendLog('Login: Usernames do not match');
 		return json_encode(array("returnCode" => '0', 'message'=>"No Users Match Username")); //no users matched username, no login
 	}
 	
@@ -64,13 +69,16 @@ function validateRegister($username,$password)
 			if ($row["username"] == $un)
 			{
 				echo "username already exist".PHP_EOL;
+				sendLog('Register: Username is already in use');
 				return json_encode(array("returnCode" => '0', 'message'=>"Username already exist try again")); //username is already being used 
 			}
 		}
 		$insert = "insert into users values(0, '$un', '$pw')"; //creates a new user and password in users table
 		if ($logindb->query($insert) === TRUE) { //check to make sure it worked
+			sendLog('Register: Username and passwords accepted');
 			return json_encode(array("returnCode" => '1', 'message'=>"Username and password accepted")); //returns that it worked to user
 		}
+		sendLog('Register: Error parsing thorugh if statements');
 		return json_encode(array("returnCode" => '0', 'message'=>"something went wrong try again")); //something went wrong in the registration of the user.
 	}
 /*
@@ -104,10 +112,12 @@ function validateSession($sessionId) {
 	$response = $logindb->query($query);
 	while ($row = $response->fetch_assoc()) {
 		if ($row["sessionID"] == $session) {
+			sendLog('Sessions: ID is valid, user logged in');
 			return json_encode(array("returnCode" => '1', 'message' => "SessionID is valid")); //returns a valid sessionID and allows the user to stay logged in.
 		} 
 	}
 	stopSession($sessionId); //stops the session if it no longer is valid.
+	sendLog('Sessions: ID is invalid');
 	return json_encode(array("returnCode" => '0', 'message' => "SessionID is invalid"));
 }
 
@@ -123,12 +133,15 @@ function stopSession($sessionId) {
 		if ($row["sessionID"] == $session) {
 			$delete = "delete from sessions where sessionID='$session'"; //deletes the session from the table sessions
 		if ($logindb->query($delete) === TRUE) { //checks to make sure it worked
+			sendLog('Sessions: User logged out');
 			return json_encode(array("returnCode" => '1', 'message' => "Logout successfull")); //returns if logout worked 
 		} 
+		sendLog('Sessions: User alread logged out');
 		return json_encode(array("returnCode" => '0', 'message' => "already logged out")); //returns when user is already logged out
 	}
 	
 	}
+	sendLog('Sessions: Logging out error');
 	return json_encode(array("returnCode" => '0', 'message' => "logout incomplete something went wrong")); //returns if something went wrong.
 }	
 
@@ -139,6 +152,7 @@ function addService($userid, $serviceid) {
 	$logindb = databaseConnect();
 	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
+		sendLog('DB: Problem getting user ID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -147,14 +161,17 @@ function addService($userid, $serviceid) {
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
 		if($row["id"] == $uid && $row["serviceID"] == $sid) {
+			sendLog('DB: Service already added');
 			return json_encode(array("returnCode" => '0', 'message' => "service already added"));
 		}
 	}
 	$insert = "insert into service_list values('$uid', '$sid')";
 	if ($logindb->query($insert) === TRUE) {
+		sendLog('DB: Service succesfully added');
 		return json_encode(array("returnCode" => '1', 'message' => "service successfully added"));
 		
 	}
+	sendLog('DB: No service added, something went wrong');
 	return json_encode(array("returnCode" => '0', 'message' => "no service added. Something went wrong"));
 }
 
@@ -165,6 +182,7 @@ function removeService($userid, $serviceid) {
 	$logindb = databaseConnect();
 	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
+		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -175,11 +193,12 @@ function removeService($userid, $serviceid) {
 		if($row["id"] == $uid && $row["serviceID"] == $sid) {
 			$insert = "insert into service_list values('$uid', '$sid')";
 			if ($logindb->query($insert) === TRUE) {
+				sendLog('DB: Service successfully removed');
 				return json_encode(array("returnCode" => '1', 'message' => "service successfully removed"));			
 			}
 		}
 	}
-		
+	sendLog('DB: No service removed, something went wrong');	
 	return json_encode(array("returnCode" => '0', 'message' => "no service removed. Something went wrong"));
 }
 
@@ -191,6 +210,7 @@ function getServices($userid) {
 	$logindb = databaseConnect();
 	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
+		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -201,6 +221,7 @@ function getServices($userid) {
 			array_push($sarray, $row["serviceID"]);
 		}
 	}
+	sendLog('DB: Service list created successful');
 	return json_encode(array("returnCode" => '1', 'message' => "service list made successful", 'serviceArray'=>$sarray)); //returns an array of movies in the list.
 }
 
@@ -211,6 +232,7 @@ function addMovie($userid, $movieid) {
 	$logindb = databaseConnect();
 	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
+		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -218,15 +240,18 @@ function addMovie($userid, $movieid) {
 	$query = "select * from watch_list where id = '$uid' and movieID = '$mid'";
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
-		if($row["id"] == $uid && $row["movieID"] == $mid) {
+		if($row["id"] == $uid && $row["movieID"] == $mid) {	
+			sendLog('DB: Service already added');
 			return json_encode(array("returnCode" => '0', 'message' => "service already added"));
 		}
 	}
 	$insert = "insert into watch_list values('$uid', '$mid')";
 	if ($logindb->query($insert) === TRUE) {
+		sendLog('DB: Service successfully added');
 		return json_encode(array("returnCode" => '1', 'message' => "service successfully added"));
 		
 	}
+	sendLog('DB: No service added, something went wrong');
 	return json_encode(array("returnCode" => '0', 'message' => "no service added. Something went wrong"));
 }
 
@@ -237,6 +262,7 @@ function removeMovie($userid, $movieid) {
 	$logindb = databaseConnect();
 	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
+		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -247,11 +273,12 @@ function removeMovie($userid, $movieid) {
 		if($row["id"] == $uid && $row["movieID"] == $mid) {
 			$insert = "insert into watch_list values('$uid', '$mid')";
 			if ($logindb->query($insert) === TRUE) {
+				sendLog('Movie successfully removed');
 				return json_encode(array("returnCode" => '1', 'message' => "movie successfully removed"));			
 			}
 		}
 	}
-		
+	sendLog('No movie removed, soemthing went wrong');
 	return json_encode(array("returnCode" => '0', 'message' => "no movie removed. Something went wrong"));
 }
 
@@ -263,6 +290,7 @@ function getMovies($userid) {
 	$usid = returnUser($userid, $logindb);
 	$logindb = databaseConnect();
 	if ($usid == NULL) {
+		sendLog('Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -273,7 +301,8 @@ function getMovies($userid) {
 			array_push($sarray, $row["movieID"]);
 		}
 	}
-	return json_encode(array("returnCode" => '1', 'message' => "movie list made successful", 'movieArray'=>$sarray)); //returns an array of movies in the list.
+	sendLog('Movie list generated successful');
+	return json_encode(array("returnCode" => '1', 'message' => "movie list made successful", 'serviceArray'=>$sarray)); //returns an array of movies in the list.
 }
 
 /*
@@ -293,6 +322,7 @@ function addRating($userid, $movieid, $rating, $db) {
 function changeRating($userid, $movieid, $rating) {
 	$logindb = databaseConnect();
 	if ($usid == NULL) {
+		sendLog('Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -302,19 +332,22 @@ function changeRating($userid, $movieid, $rating) {
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
 		if($row["id"] == $uid && $row["movieID"] == $mid && $row["ratings"] == $rate) {
+			sendLog('Rating error, already that rating');
 			return json_encode(array("returnCode" => '0', 'message' => "rating is already that rating"));
 		}
 		else if($row["id"] == $uid && $row["movieID"] == $mid && $row["ratings"] != $rate) {
 			$change = "UPDATE ratings set ratings = '$rate' where id = '$uid' and movieID = '$mid'";
 			if($logindb->query($change) === TRUE) {
+				sendLog('Rating updated successfully');
 				return json_encode(array("returnCode" => '1', 'message' => "rating update successful"));
 			}
 		}
 	}
 	if (addRating($uid, $mid, $rate, $logindb)) {
+		sendLog('Changed rating successful');
 		return json_encode(array("returnCode" => '1', 'message' => "successfully changed the rating"));
 	}
-		
+	sendLog('Rating not changed correctly');
 	return json_encode(array("returnCode" => '0', 'message' => "rating not changed"));
 }
 
@@ -325,6 +358,7 @@ function getRating($userid, $movieid) {
 	$sarray = array();
 	$logindb = databaseConnect();
 	if ($usid == NULL) {
+		sendLog('Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
 	}
 	$uid = $logindb->real_escape_string($usid);
@@ -333,9 +367,11 @@ function getRating($userid, $movieid) {
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
 		if($row["id"] == $uid && $row["movieID"] == $mid) {
+		sendLog('Returning rating of movie');
 		return json_encode(array("returnCode" => '1', 'message' => "rating achieved", 'rating'=>$row["rating"])); //returns the rating for the movie
 		}
 	}
+	sendLog('Failed to return rating');
 	return json_encode(array("returnCode" => '0', 'message' => "failed to get a rating", 'serviceArray'=>$sarray)); 
 }
 ?>

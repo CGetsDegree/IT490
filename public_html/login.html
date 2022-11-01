@@ -44,6 +44,7 @@ let failure=document.querySelector("#failure");
 async function validate(){
 	let fd=new FormData(form);
 	fd.append("type","login");
+	let uname=fd.get("username");
 	console.log("Logging in");
 	try{
 		let response=await fetch('uservalidate.php', {
@@ -53,16 +54,18 @@ async function validate(){
 		console.log("Here");
 		let result=await response.json();
 		console.log(result);
-		showMessage(result.message, result.returnCode=="1"?"success":"error");
 		if (result.returnCode=="1"){
+			document.cookie="sessionid="+encodeURIComponent(result.sessionid)+";path='/';SameSite=Lax;";
+			document.cookie="username="+uname;
 			location.href="home.html";
 		}
+		showMessage(result.message);
 	}catch(error){
-		showMessage(error.message,"error");
+		showMessage(error.message);
 	}
 }
 
-function showMessage(message,result){
-	failure.innerHTML="<div class='alert alert-"+result+"'>"+message+"</div>";
+function showMessage(message){
+	failure.innerHTML="<div class='alert alert-error'>"+message+"</div>";
 }
 </script>
