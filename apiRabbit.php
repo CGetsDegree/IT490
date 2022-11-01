@@ -4,11 +4,11 @@ require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 require("apiStuff.php");
-include('sendLog.php');
+include('rabbitFunctions.php');
 
 //$request = array("type"=>"search", "query"=>"Star Wars", "page"=>1);
 
-echo SendToLogger("API Server Startup");
+echo sendLog("API Server Startup");
 
 function requestProcessor($request)
 {
