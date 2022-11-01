@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <html>
 	<div class="navigation"></div>
-	<button name="watchlists" action="watchlists.html">View or Create Watchlists</button>
+	<button name="watchlists" action="watchlist.html">View or Create Watchlist</button>
 	<button name="favorites" action="favorites.html">Favorites</button>
 	<button name="profile" action="goToProfile()">Your Profile</button>
 	<button name="logout" onclick="logout()">Log Out</button>
@@ -46,7 +46,8 @@
                         method:"POST",
                         body: sessiondata
                 });
-		document.cookie="sessionid=;username=;path='/'";
+		document.cookie="sessionid=;path='/'";
+		document.cookie="username=;path='/'";
 		location.href="login.html";
         	}catch(error){
                 	console.log("Error logging out");
