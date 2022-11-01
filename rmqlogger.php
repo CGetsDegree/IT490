@@ -6,7 +6,7 @@ require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
 
 function process($error) {
-	$handler = fopen("errorLog.txt","a+");
+	$handler = fopen("logger.txt","a+");
 	fwrite($handler, $error."\n");
 	fclose($handler);
 	echo 'Log recieved'.PHP_EOL;
