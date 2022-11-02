@@ -6,12 +6,18 @@ require_once('../rabbitMQLib.inc');
 require_once('Connection.php');
 require_once('rFunctions.inc');
 require_once('forumFunctions.inc');
+<<<<<<< HEAD
+=======
+include_once('../sendLog.php');
+>>>>>>> f5cff1e9b902ef986a6a605e87e5840f3d6a7b70
 
 echo SendToLogger("DB Server Startup");
 
 function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
+  var_dump($request);
+  //$request = json_decode($request, true);
   var_dump($request);
   if(!isset($request['type']))
   {
@@ -43,6 +49,24 @@ function requestProcessor($request)
     	return changeRating($request['username'], $request['movieid'], $request['rating']);
     case "get_movie_rating":
     	return getRating($request['username'], $request['movieid']);
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> f5cff1e9b902ef986a6a605e87e5840f3d6a7b70
+    case "get_forum_posts":
+    	return sendForumPosts($request['forumTopic']);
+    case "get_forum_topics":
+    	return sendForumTopics();
+    case "create_forum_topic":
+    	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
+    case "create_forum_post":
+<<<<<<< HEAD
+    	return createForumPost($request['username'], $request['postText'], $request['forumTopic']);
+=======
+>>>>>>> main
+=======
+    	return createForumPost(request['username'], request['postText'], request['forumTopic']);
+>>>>>>> f5cff1e9b902ef986a6a605e87e5840f3d6a7b70
     
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));
@@ -50,6 +74,6 @@ function requestProcessor($request)
 
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
-echo "server started";
+echo "server started".PHP_EOL;
 $server->process_requests('requestProcessor');
 ?>
