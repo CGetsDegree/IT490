@@ -12,6 +12,8 @@ function requestProcessor($request)
 {
   echo "received request".PHP_EOL;
   var_dump($request);
+  //$request = json_decode($request, true);
+  var_dump($request);
   if(!isset($request['type']))
   {
     return "ERROR: unsupported message type";
@@ -47,9 +49,9 @@ function requestProcessor($request)
     case "get_forum_topics":
     	return sendForumTopics();
     case "create_forum_topic":
-    	return createForumTopic(request['username'], request['forumName'], request['postText']);
+    	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
     case "create_forum_post":
-    	return createForumPost(request['username'], request['postText'], request['forumTopic']);
+    	return createForumPost($request['username'], $request['postText'], $request['forumTopic']);
     
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));
