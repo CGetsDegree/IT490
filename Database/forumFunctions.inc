@@ -62,9 +62,11 @@ function createForumTopic($username, $forumName, $postText) {
 	$query = "insert into forum_topics values(0, '$fn', current_timestamp, '$uid')";
 	$insert = $logindb->query($query);
 	if ($insert === TRUE) {
-		$select = "select max(topicId) from forum_topics";
+		$select = $logindb->query("select max(topicId) from forum_topics");
+		while($row = $select->fetch_assoc()) {
+			createForumPost($username, $postText, $row["topicId"]);
+		}
 		
-		createForumPost($username, $postText, $select["topicId"]);
 		
 		return json_encode(array("returnCode" => '1', 'message' => "Topic created successfully"));	
 	}
