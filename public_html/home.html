@@ -1,0 +1,57 @@
+<!DOCTYPE HTML>
+<meta charset="utf-8">
+<html>
+	<div class="navigation"></div>
+	<button name="watchlists" action="watchlist.html">View or Create Watchlist</button>
+	<button name="favorites" action="favorites.html">Favorites</button>
+	<button name="profile" action="goToProfile()">Your Profile</button>
+	<button name="logout" onclick="logout()">Log Out</button>
+</html>
+
+<script>
+	const sessionid=('; '+document.cookie).split('; sessionid=').pop().split(';')[0];
+	const username=('; '+document.cookie).split('; username=').pop().split(';')[0];
+	console.log(sessionid);
+	console.log(username);
+	let sessiondata=new FormData();
+	sessiondata.append("sessionid",sessionid);
+	async function validateSession(){
+		sessiondata.append("type","validate_session");
+		console.log(sessiondata);
+                try{
+                let response=await fetch('sessionvalidate.php', {
+                        method:"POST",
+                        body: sessiondata
+                });
+                let result=await response.json();
+		if (result.returnCode!="1"){
+				document.cookie="sessionid=;username=;path='/'";
+				location.href="login.html";
+			}
+		}
+		catch(error){
+                        console.log("Error validating session");
+                }
+
+	}
+	validateSession();
+	function goToProfile(){
+		location.href="profile.html?u="+encodeURIComponent(username);
+	}
+	async function logout(){
+		sessiondata.delete("type");
+		sessiondata.append("type","logout");
+		try{
+                let response=await fetch('sessionvalidate.php', {
+                        method:"POST",
+                        body: sessiondata
+                });
+		document.cookie="sessionid=;path='/'";
+		document.cookie="username=;path='/'";
+		location.href="login.html";
+        	}catch(error){
+                	console.log("Error logging out");
+        	}
+
+	}
+</script>

@@ -7,6 +7,7 @@ require_once('Connection.php');
 require_once('rFunctions.inc');
 require_once('forumFunctions.inc');
 
+echo SendToLogger("DB Server Startup");
 
 function requestProcessor($request)
 {
@@ -44,6 +45,7 @@ function requestProcessor($request)
     	return changeRating($request['username'], $request['movieid'], $request['rating']);
     case "get_movie_rating":
     	return getRating($request['username'], $request['movieid']);
+<<<<<<< HEAD
     case "get_forum_posts":
     	return sendForumPosts($request['forumTopic']);
     case "get_forum_topics":
@@ -52,6 +54,8 @@ function requestProcessor($request)
     	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
     case "create_forum_post":
     	return createForumPost($request['username'], $request['postText'], $request['forumTopic']);
+=======
+>>>>>>> main
     
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));

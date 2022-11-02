@@ -1,0 +1,66 @@
+<!DOCTYPE=html>
+<meta charset="utf-8">
+<html>
+	<div id="navigation"></div>
+	<body>
+		<div id="searching" class="half right">
+			<input type="text" name="search" id="search" onkeyup="search()" placeholder="Search for movies">
+				<ul id="movielist">
+				</ul>
+			<button name="add" id="add" onclick="addToWatchlist()">Add To Watchlist</button>
+		</div>
+		<div class="half left"><table id="watchlist"></table></div>
+	</body>
+</html>
+<style>
+li{
+	.height="24px";
+	.color="lightslategray";
+}
+</style>
+<script>
+	let movielist=document.queryselector("#movielist");
+	let searchbar=document.queryselector("#search");
+	const sessionid=("; "+document.cookie).split("; sessionid=").pop().split(";")[0];
+	async function search(){
+		var fd=new FormData();
+		fd.append("searchquery",searchbar.value);
+		fd.append("type","searchmovies");
+		fd.append("sessionid",sessionid);
+		let response=await fetch("movies.php",{
+			method:"POST",
+			body:fd
+		});
+		let result=response.json();
+		if (result!=null){
+			movielist.empty();
+			for (record in data){
+				movielist.append(
+					'<li id="'+data[record].id+'"><image class="poster" url="'+data[record].poster+'">'+
+					data[record].title+data[record].releasedate+data[record].company+
+					'<a href="movie?m='+data[record].id+'">See more details</a>'+
+					'<input type="checkbox" value='+data[record].id+'>'
+					);
+			}
+		}
+	}
+	async function addToWatchList(){
+		var fd=new FormData();
+		fd.append("type","addToWatchlist");
+		fd.append("sessionid",sessionid);
+		let checked=document.queryselectorall('input[type="checkbox"]:"checked"');
+		let movies='{';
+		for (var mov of checked){
+			movies.append(mov.value+', ');
+		}
+		movies.append('"END"}');
+		fd.append("movies",movies);
+
+		let response=await fetch("movies.php",{
+                        method:"POST",
+                        body:fd
+                });
+                let result=response.json();
+	}
+
+</script>
