@@ -10,7 +10,9 @@
 			<button name="submit" id="submit" onclick="search()">Search</button>
 			<br>
 			<button name="add" id="add" onclick="addToWatchlist()">Add To Watchlist</button>
+			<br>
 			<button name="pageP" id="pageP" onclick="prevPage()">Previous</button>
+			<button id="pagenum"></button>
 			<button name="pageN" id="pageN" onclick="nextPage()">Next</button>
 		</div>
 		<div class="half left"><table id="watchlist"></table></div>
@@ -25,6 +27,7 @@ li{
 <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 	var page=1;
+	let pagenum=document.querySelector("#pagenum");
 	let movielist=document.querySelector("#movielist");
 	let searchbar=document.querySelector("#search");
 	let query=searchbar.value;
@@ -63,12 +66,14 @@ async function dosearch(fd){
                         for (var record in result){
                                 movielist.innerHTML+=
                                         '<li id="'+result[record].id+'"><image class="poster" url="'+result[record].poster+'">'+
-                                        result[record].title+result[record].releasedate+result[record].company+
-                                        '<a href="movie.html?m='+result[record].id+'">See more details</a>'+
+                                        result[record].title+result[record].release_date+result[record].production_companies[0].name+
+                                        '<a href="movieDetail.php?m='+result[record].id+'">See more details</a>'+
                                         '<input type="checkbox" value='+result[record].id+'>';
 			}
+		pagenum.innerText=page;
 	}
 async function prevPage(){
+	console.log("prevPage "+page);
 	if (!searchbar.value!=""){
 		return;
 	}
@@ -78,21 +83,19 @@ async function prevPage(){
 
 }
 async function nextPage(){
+	console.log("nextPage "+page);
         page++;
 }
 	async function addToWatchList(){
 		var fd=new FormData();
-		fd.append("type","addToWatchlist");
+		fd.append("type","add_movie_list");
 		fd.append("sessionid",sessionid);
 		let checked=document.querySelectorAll('input[type="checkbox"]:"checked"');
-		let movies = "{"+checked.join(", ")+"}";
+		let movies = "{"+checked.join(",")+"}";
+		console.log(movies);
 		fd.append("movies",movies);
 
-		let response=await fetch("movies.php",{
-                        method:"POST",
-                        body:fd
-                });
-                let result=await response.json();
+                let result=await dosearch(fd);
 		console.log(result);
 	}
 
