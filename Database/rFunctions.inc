@@ -36,7 +36,8 @@ function validateLogin($username,$password)
 				$sessionid = createSession(rand(100000, 99999999));
 				if ($sessionid != NULL) {
 					sendLog('Login: Login successful');
-					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)); // password matched with username, allows login
+					var_dump(json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)));
+					return json_encode(array("returnCode" => '1', 'message'=>"Look at that you logged in lucky dog", 'sessionid'=>$sessionid)); // password matched with username, allows login
 				}
 				else {
 					sendLog('Login: Error generating session');

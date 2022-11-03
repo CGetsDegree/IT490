@@ -12,7 +12,7 @@ function sendForumPosts($forumTopic) {
 	//$timeArray = array();
 	//$ownerArray = array();
 	$logindb = databaseConnect();
-	$ft = $logindp->real_escape_string($forumTopic);
+	$ft = $logindb->real_escape_string($forumTopic);
 	$query = "select * from forum_post where topicId = 'forumTopic'";
 	$select = $logindb->query($query);
 	while($row = $select->fetch_assoc()) {
@@ -38,14 +38,19 @@ function sendForumTopics() {
 	//$timeArray = array();
 	//$ownerArray = array();
 	$logindb = databaseConnect();
-	$ft = $logindp->real_escape_string($forumTopic);
 	$query = "select * from forum_topics";
 	$select = $logindb->query($query);
 	while($row = $select->fetch_assoc()) {
-		array_push($sparray, $row["topicId"]);
+		$sparray[] = $row["topicId"];
 		array_push($sparray, $row["topicTitle"]);
 		array_push($sparray, $row["topicCreateTime"]);
 		array_push($sparray, $row["topicOwner"]);
+		$tp = $row["topicId"];
+		$sels = "select count(*) from forum_post where forumId='$tp'";
+		$sel = $logindb->query($sels);
+		while($ro = $sel->fetch_assoc()) {
+			array_push($sparray, $ro["count(*)"]);
+		}
 		array_push($forumArray, $sparray);
 		unset($sparray);
 	}
@@ -62,13 +67,14 @@ function createForumTopic($username, $forumName, $postText) {
 	$query = "insert into forum_topics values(0, '$fn', current_timestamp, '$uid')";
 	$insert = $logindb->query($query);
 	if ($insert === TRUE) {
-		$select = $logindb->query("select max(topicId) from forum_topics");
+		$sel = "select MAX(topicId) from forum_topics";
+		$select = $logindb->query($sel);
 		while($row = $select->fetch_assoc()) {
-			createForumPost($username, $postText, $row["topicId"]);
+			echo "what is this id  = ".$row["MAX(topicId)"].PHP_EOL;
+			$forum = createForumPost($username, $postText, $row["MAX(topicId)"]);
+			return json_encode(array("returnCode" => '1', 'message' => "Topic created successfully"));
 		}
-		
-		
-		return json_encode(array("returnCode" => '1', 'message' => "Topic created successfully"));	
+			
 	}
 	return json_encode(array("returnCode" => '0', 'message' => "failed to create topic"));
 }

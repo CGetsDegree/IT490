@@ -1,17 +1,16 @@
 #!/usr/bin/php
 <?php
-require_once('../rpc/path.inc');
-require_once('../get_host_info.inc');
-require_once('../rabbitMQLib.inc');
+require_once('../rabbitFunctions.php');
 require_once('Connection.php');
 require_once('rFunctions.inc');
 require_once('forumFunctions.inc');
 
 function requestProcessor($request)
 {
+  $response = '';
   echo "received request".PHP_EOL;
   var_dump($request);
-  $request = json_decode($request, true);
+  //$request = json_decode($request, true);
   var_dump($request);
   if(!isset($request['type']))
   {
@@ -51,8 +50,12 @@ function requestProcessor($request)
     	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
     case "create_forum_post":
     	return createForumPost($request['username'], $request['postText'], $request['forumTopic']);
+    case "search":
+    	$response = sendAPI($request);
+    	var_dump($response);
+    	return $response;
   }
-  return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));
+  return json_encode(array("returnCode" => '0', 'message'=>"Server message recieved but type not defined"));
 }
 
 
