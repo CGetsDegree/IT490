@@ -3,7 +3,7 @@
 
 //$response = getServices(11);
 //$output = array();
-serviceNames();//$movies = array(11, 436270, 550, 1919);
+//serviceNames();//$movies = array(11, 436270, 550, 1919);
 //displayWatchlist($movies);
 //echo $result;
 //$output = json_decode($response, true);
@@ -162,7 +162,7 @@ function serviceNames(){
 	$result = json_decode($result,true);
 	$list = array();
 	//print_r($result);
-	foreach($result as $item){
+	foreach($result["results"] as $item){
 		$list[$item["provider_id"]] = $list["provider_name"];
 	}
 	return json_encode($list,JSON_FORCE_OBJECT);
