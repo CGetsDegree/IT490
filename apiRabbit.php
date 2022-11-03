@@ -39,6 +39,10 @@ function requestProcessor($request)
       $response = getMovieDetails($request['id']);
       var_dump($response);
       return $response;
+    case "get_service_titles":
+    	$response = serviceNames();
+    	var_dump($response);
+    	return $response;
     case "get_recommendation":
       return getRecommended($request['id']);
     case "get_watchlist":

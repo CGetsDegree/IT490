@@ -3,8 +3,7 @@
 
 //$response = getServices(11);
 //$output = array();
-//searchMovies("Rogue One");
-//$movies = array(11, 436270, 550, 1919);
+serviceNames();//$movies = array(11, 436270, 550, 1919);
 //displayWatchlist($movies);
 //echo $result;
 //$output = json_decode($response, true);
@@ -149,7 +148,25 @@ function searchMovies($query, $page=1){
 	//var_dump($info);
 	return json_encode($info,JSON_FORCE_OBJECT);
 }
-
+function serviceNames(){
+	$url = "https://api.themoviedb.org/3/watch/providers/movie?api_key=f94eca9d744133b72f98995bdc4cca12&language=en-US&watch_region=US";
+	$options = array(
+		CURLOPT_RETURNTRANSFER => true,
+		//CURLOPT_HEADER => false,
+		CURLOPT_FOLLOWLOCATION => true,
+		CURLOPT_HTTPHEADER => array("Accept:application/json"));
+	$searchProviders = curl_init($url);
+	curl_setopt_array($searchProviders, $options);
+	$result = curl_exec($searchProviders);
+	curl_close($searchProviders);
+	$result = json_decode($result,true);
+	$list = array();
+	//print_r($result);
+	foreach($result as $item){
+		$list[$item["provider_id"]] = $list["provider_name"];
+	}
+	return json_encode($list,JSON_FORCE_OBJECT);
+}
 function displayWatchlist($movies = array()){
 	$list = array();
 	foreach($movies as $movie){
@@ -162,8 +179,8 @@ function displayWatchlist($movies = array()){
 			"genres"=>$details["genres"],
 			"production_companies"=>$details["production_companies"]);
 	}
-	print_r($list);
-	return $list;
+	//print_r($list);
+	return json_encode($list);
 }
 
 function getRecommended($id){
