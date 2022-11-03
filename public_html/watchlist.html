@@ -1,7 +1,7 @@
 <!DOCTYPE=html>
 <meta charset="utf-8">
 <html>
-	<div id="navigation"></div>
+	<div id="navigation"><button id="home" onclick="href.location='home.html'">Go Home</button></div>
 	<body>
 		<div id="searching" class="half right">
 			<input type="text" name="search" id="search" placeholder="Search for movies">
@@ -32,7 +32,9 @@ li{
 	let searchbar=document.querySelector("#search");
 	let query=searchbar.value;
 	const sessionid=("; "+document.cookie).split("; sessionid=").pop().split(";")[0];
+        const username=("; "+document.cookie).split("; username=").pop().split(";")[0];
 async function dosearch(fd){
+	console.log("axios request started");
 	const res=await axios.post("movies.php",fd);
 	return res.data;
 }
@@ -55,6 +57,7 @@ async function dosearch(fd){
 		}
 		fd.append("type","search");
 		fd.append("sessionid",sessionid);
+		fd.append("username",username);
 		fd.append("page",page);
 		for (const val of fd.values()){
 			console.log(val);
@@ -63,11 +66,12 @@ async function dosearch(fd){
 		console.log(result);
 		movielist.innerHTML="";
                         console.log("Building html...");
+			console.log(result);
                         for (var record in result){
                                 movielist.innerHTML+=
                                         '<li id="'+result[record].id+'"><image class="poster" url="'+result[record].poster+'">'+
                                         result[record].title+result[record].release_date+result[record].production_companies[0].name+
-                                        '<a href="movieDetail.php?m='+result[record].id+'">See more details</a>'+
+                                        '<a href="movieDetail.php?id='+result[record].id+'">See more details</a>'+
                                         '<input type="checkbox" value='+result[record].id+'>';
 			}
 		pagenum.innerText=page;
@@ -91,7 +95,11 @@ async function nextPage(){
 		fd.append("type","add_movie_list");
 		fd.append("sessionid",sessionid);
 		let checked=document.querySelectorAll('input[type="checkbox"]:"checked"');
-		let movies = "{"+checked.join(",")+"}";
+		let checks=new Array();
+		for (check in checked){
+			checks.append(value);
+		}
+		let movies = "{"+checks.join(",")+"}";
 		console.log(movies);
 		fd.append("movies",movies);
 
