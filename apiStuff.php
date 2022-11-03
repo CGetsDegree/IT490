@@ -77,7 +77,8 @@ function getMovieDetails($id){
 		"poster_path"=>$resultOne["poster_path"],
 		"overview"=>$resultOne["overview"],
 		"release_date"=>$resultOne["release_date"],
-		"genres"=>$resultOne["genres"]);
+		"genres"=>$resultOne["genres"],
+		"runtime"=>$resultOne["runtime"]);
 	$services = array();
 	foreach($resultTwo["flatrate"] as $service){
 		$services[$service["provider_id"]] = $service["provider_name"];
@@ -103,7 +104,7 @@ function getMovieDetails($id){
 	}
 		
 	//print_r($result);
-	return $result;
+	return json_encode($result,JSON_FORCE_OBJECT);
 }
 
 function getCredits($id){

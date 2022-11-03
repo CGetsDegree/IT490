@@ -7,7 +7,7 @@ require_once("rabbitFunctions.php");
 $name = $_POST["post_title"];
 $forumPost = array(
 	"type"=>"create_forum_topic",
-	"username"=>"test",
+	"username"=>$_COOKIE["username"],
 	"forumName"=>$_POST["post_title"],
 	"postText"=>$_POST["post_text"]);
 //var_dump($forumPost);
