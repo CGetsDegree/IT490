@@ -8,6 +8,7 @@ if ($_POST){
       $request = array();
       $request['type'] = $rtype;
       $request['sessionid'] = $sessionid;
+      $request["username"]=$_POST["username"];
       if ($rtype=="search"){
       	$request['query']=$_POST["searchquery"];
 	$request['page']=$_POST["page"];
@@ -16,7 +17,11 @@ if ($_POST){
 	      $movies=array();
 	      $movies=json_decode($_POST["movies"]);
 	      $request["movies"]=$movies;
-         }
+     }
+     else if ($rtype=="change_movie_rating"){
+	     $request["movieid"]=$_POST["movie_id"];
+	     $request["rating"]=$_POST["rating"];
+     }
       $client=new rabbitMQClient("testRabbitMQ.ini","testServer");
       $response=$client->send_request($request);
       header("Content-Type: application/json");
