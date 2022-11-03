@@ -1,10 +1,7 @@
 #!/usr/bin/php
 <?php
-require_once('path.inc');
-require_once('get_host_info.inc');
-require_once('rabbitMQLib.inc');
+require_once('rabbitFunctions.php');
 
-$client = new rabbitMQClient("testRabbitMQ.ini","testServer");
 if (isset($argv[1]))
 {
   $msg = $argv[1];
@@ -19,7 +16,7 @@ $request['type'] = "Login";
 $request['username'] = "Frank";
 $request['password'] = "yourmom";
 $request['message'] = $msg;
-$response = $client->send_request($request);
+$response = sendDB($request);
 //$response = $client->publish($request);
 
 echo "client received response: ".PHP_EOL;
