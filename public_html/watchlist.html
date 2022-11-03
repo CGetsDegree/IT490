@@ -4,9 +4,11 @@
 	<div id="navigation"></div>
 	<body>
 		<div id="searching" class="half right">
-			<input type="text" name="search" id="search" onkeyup="search()" placeholder="Search for movies">
+			<input type="text" name="search" id="search" placeholder="Search for movies">
 				<ul id="movielist">
 				</ul>
+			<button name="submit" id="submit" onclick="search()">Search</button>
+			<br>
 			<button name="add" id="add" onclick="addToWatchlist()">Add To Watchlist</button>
 			<button name="pageP" id="pageP" onclick="prevPage()">Previous</button>
 			<button name="pageN" id="pageN" onclick="nextPage()">Next</button>
@@ -20,12 +22,17 @@ li{
 	.color="lightslategray";
 }
 </style>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 <script>
 	var page=1;
 	let movielist=document.querySelector("#movielist");
 	let searchbar=document.querySelector("#search");
 	let query=searchbar.value;
 	const sessionid=("; "+document.cookie).split("; sessionid=").pop().split(";")[0];
+async function dosearch(fd){
+	const res=await axios.post("movies.php",fd);
+	return res.data;
+}
 	async function search(){
 		var fd=new FormData();
 		if (searchbar.value!=""){
@@ -46,41 +53,32 @@ li{
 		fd.append("type","search");
 		fd.append("sessionid",sessionid);
 		fd.append("page",page);
-		let response=await fetch("movies.php",{
-			method:"POST",
-			body:fd
-		});
-		let result=await response.json();
-			movielist.innerHTML="";
-			for (record in result){
-				movielist.append(
-					'<li id="'+result[record].id+'"><image class="poster" url="'+result[record].poster+'">'+
-					result[record].title+result[record].releasedate+result[record].company+
-					'<a href="movie?m='+result[record].id+'">See more details</a>'+
-					'<input type="checkbox" value='+result[record].id+'>'
-					);
+		for (const val of fd.values()){
+			console.log(val);
+		}
+		const result=await dosearch(fd);
+		console.log(result);
+		movielist.innerHTML="";
+                        console.log("Building html...");
+                        for (var record in result){
+                                movielist.innerHTML+=
+                                        '<li id="'+result[record].id+'"><image class="poster" url="'+result[record].poster+'">'+
+                                        result[record].title+result[record].releasedate+result[record].company+
+                                        '<a href="movie.html?m='+result[record].id+'">See more details</a>'+
+                                        '<input type="checkbox" value='+result[record].id+'>';
 			}
-		return true;
-
 	}
 async function prevPage(){
 	if (!searchbar.value!=""){
-		return false;
+		return;
 	}
 	if (page>1){
 		page--;
-		return await search();
 	}
 
 }
 async function nextPage(){
-        if (!searchbar.value!=""){
-                return false;
-        }
         page++;
-	if (!await search()){
-		page=1;
-	}
 }
 	async function addToWatchList(){
 		var fd=new FormData();
