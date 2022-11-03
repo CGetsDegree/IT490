@@ -26,7 +26,7 @@ $display_block .= "<th><strong>Services</strong></th><tr><td><strong>$servarr</s
 <html>
 <head>
 Words
-<?php echo "Username: ".$_COOKIE["username"]); ?>
+<?php echo "Username: ".$_COOKIE["username"]; ?>
 </head>
 <body>
 <?php echo $display_block; ?>

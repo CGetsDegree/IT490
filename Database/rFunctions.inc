@@ -310,7 +310,7 @@ function getMovies($userid) {
 * Adds a rating on request
 */
 function addRating($userid, $movieid, $rating, $db) {
-	$query = "insert into ratings values('$userid', '$movieid', '$rating', '$db')";
+	$query = "insert into ratings values('$userid', '$movieid', '$rating')";
 	if ($db->query($query) === TRUE) {
 		return 1;
 	}
@@ -322,6 +322,7 @@ function addRating($userid, $movieid, $rating, $db) {
 */
 function changeRating($userid, $movieid, $rating) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		sendLog('Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -329,24 +330,30 @@ function changeRating($userid, $movieid, $rating) {
 	$uid = $logindb->real_escape_string($usid);
 	$mid = $logindb->real_escape_string($movieid);
 	$rate = $logindb->real_escape_string($rating);
-	$query = "select * from ratings where id = '$uid' and movieID = '$mid' and ratings = '$rate'";
+	$query = "select * from ratings where id = '$uid' and movieID = '$mid'";
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
+		echo "entered the while loop".PHP_EOL;
 		if($row["id"] == $uid && $row["movieID"] == $mid && $row["ratings"] == $rate) {
 			sendLog('Rating error, already that rating');
-			return json_encode(array("returnCode" => '0', 'message' => "rating is already that rating"));
+			echo "rating hasn't changed".PHP_EOL;
+			return json_encode(array("returnCode" => '1', 'message' => "rating is already that rating", "rating"=>$rating));
 		}
-		else if($row["id"] == $uid && $row["movieID"] == $mid && $row["ratings"] != $rate) {
+		echo $rate.PHP_EOL;
+		echo $row["ratings"].PHP_EOL;
+		if($row["id"] == $uid && $row["movieID"] == $mid && $row["ratings"] != $rate) {		
+			echo "Preparing to update rating".PHP_EOL;
 			$change = "UPDATE ratings set ratings = '$rate' where id = '$uid' and movieID = '$mid'";
 			if($logindb->query($change) === TRUE) {
 				sendLog('Rating updated successfully');
-				return json_encode(array("returnCode" => '1', 'message' => "rating update successful"));
+				return json_encode(array("returnCode" => '1', 'message' => "rating update successful", "rating"=>$rating));
 			}
 		}
 	}
+	echo "attempting to add rating".PHP_EOL;
 	if (addRating($uid, $mid, $rate, $logindb)) {
 		sendLog('Changed rating successful');
-		return json_encode(array("returnCode" => '1', 'message' => "successfully changed the rating"));
+		return json_encode(array("returnCode" => '1', 'message' => "successfully changed the rating", "rating"=>$rating));
 	}
 	sendLog('Rating not changed correctly');
 	return json_encode(array("returnCode" => '0', 'message' => "rating not changed"));
