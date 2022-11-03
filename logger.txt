@@ -1,4 +1,5 @@
 19:03:38pm:API Server Startup
+<<<<<<< Updated upstream
 17:45:46pm:API Server Startup
 17:59:54pm:API Server Startup
 18:11:45pm:API Server Startup
@@ -6,3 +7,75 @@
 18:47:35pm:API Server Startup
 19:10:06pm:API Server Startup
 19:19:29pm:API Server Startup
+20:36:26pm:API Server Startup
+20:52:48pm:API Server Startup
+=======
+19:09:48pm:API Server Startup
+19:30:55pm:API Server Startup
+20:17:40pm:API Server Startup
+21:00:00pm:API Server Startup
+21:03:17pm:API Server Startup
+21:03:53pm:API Server Startup
+21:05:37pm:API Server Startup
+22:43:39pm:API Server Startup
+22:58:40pm:API Server Startup
+23:03:15pm:API Server Startup
+23:05:13pm:API Server Startup
+23:06:47pm:API Server Startup
+23:10:35pm:API Server Startup
+23:11:53pm:API Server Startup
+23:13:01pm:API Server Startup
+23:59:18pm:API Server Startup
+00:17:42am:API Server Startup
+00:20:09am:API Server Startup
+13:05:15pm:API Server Startup
+13:25:52pm:API Server Startup
+14:06:37pm:API Server Startup
+15:05:47pm:API Server Startup
+15:12:19pm:Register: Username and passwords accepted
+15:14:20pm:Login: Login successful
+15:14:33pm:Login: Login successful
+15:15:36pm:API Server Startup
+15:19:29pm:Login: Login successful
+15:19:32pm:Login: Login successful
+15:19:38pm:Sessions: ID is valid, user logged in
+15:20:04pm:Sessions: User logged out
+15:20:22pm:Sessions: Logging out error
+15:20:58pm:API Server Startup
+15:31:44pm:API Server Startup
+15:39:54pm:API Server Startup
+15:41:48pm:API Server Startup
+15:41:55pm:Sessions: Logging out error
+15:41:56pm:Sessions: ID is invalid
+15:47:30pm:API Server Startup
+15:55:11pm:API Server Startup
+15:57:56pm:API Server Startup
+16:04:05pm:API Server Startup
+16:11:23pm:Sessions: Logging out error
+16:11:24pm:Sessions: ID is invalid
+16:13:46pm:API Server Startup
+16:20:12pm:Login: Login successful
+16:20:17pm:Sessions: ID is valid, user logged in
+16:20:54pm:API Server Startup
+16:26:50pm:Login: Login successful
+16:26:54pm:Sessions: ID is valid, user logged in
+16:32:05pm:Sessions: ID is valid, user logged in
+16:32:13pm:Login: Login successful
+16:32:16pm:Sessions: ID is valid, user logged in
+16:33:54pm:Login: Passwords do not match
+16:33:55pm:Login: Usernames do not match
+16:34:05pm:Login: Login successful
+16:34:08pm:Sessions: ID is valid, user logged in
+16:34:33pm:Login: Login successful
+16:34:38pm:Sessions: ID is valid, user logged in
+16:35:03pm:Login: Login successful
+16:35:05pm:Sessions: ID is valid, user logged in
+16:37:03pm:Login: Login successful
+16:37:09pm:Sessions: ID is valid, user logged in
+16:40:07pm:Login: Login successful
+16:40:10pm:Sessions: ID is valid, user logged in
+16:47:15pm:API Server Startup
+16:51:08pm:API Server Startup
+17:27:53pm:API Server Startup
+>>>>>>> Stashed changes
+21:12:04pm:API Server Startup
