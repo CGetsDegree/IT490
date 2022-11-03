@@ -3,8 +3,8 @@
 require_once('path.inc');
 require_once('get_host_info.inc');
 require_once('rabbitMQLib.inc');
-require("apiStuff.php");
-include('rabbitFunctions.php');
+require_once("apiStuff.php");
+require_once('rabbitFunctions.php');
 
 //$request = array("type"=>"search", "query"=>"Star Wars", "page"=>1);
 
@@ -12,6 +12,7 @@ echo sendLog("API Server Startup");
 
 function requestProcessor($request)
 {
+  //$request = json_decode($request,true);
   echo "received request".PHP_EOL;
   var_dump($request);
   if(!isset($request['type']))
@@ -23,11 +24,15 @@ function requestProcessor($request)
     case "search":
     	if(isset($request["page"])){
     		//echo "page is set";
-    		return json_encode(searchMovies($request['query'],$request['page']));
+    		$response = searchMovies($request["query"],$request['page']);
+    		var_dump($response);
+    		return $response;
     	}
     	else{
     		//echo "page not set, returning page 1 as default";
-    		return json_encode(searchMovies($request['query']));
+    		$response = searchMovies($request["query"]);
+    		var_dump($response);
+    		return $response;
     	}
      
     case "get_details":
@@ -45,6 +50,4 @@ echo "Server started up".PHP_EOL;
 $server->process_requests('requestProcessor');
 echo "Server shut down".PHP_EOL;
 exit();
-?>
-
 ?>

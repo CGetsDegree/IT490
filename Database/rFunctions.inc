@@ -3,6 +3,9 @@
 require_once('Connection.php');
 require_once('../rabbitFunctions.php');
 
+/*
+* returns the userid from the list of users.
+*/
 function returnUser($username, $db) {
 	$query = "select * from users where username = '$username'";
 	$result = $db->query($query);
@@ -33,7 +36,8 @@ function validateLogin($username,$password)
 				$sessionid = createSession(rand(100000, 99999999));
 				if ($sessionid != NULL) {
 					sendLog('Login: Login successful');
-					return json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)); // password matched with username, allows login
+					var_dump(json_encode(array("returnCode" => '1', 'message'=>"Passwords Match", 'sessionid'=>$sessionid)));
+					return json_encode(array("returnCode" => '1', 'message'=>"Look at that you logged in lucky dog", 'sessionid'=>$sessionid)); // password matched with username, allows login
 				}
 				else {
 					sendLog('Login: Error generating session');
@@ -177,6 +181,7 @@ function addService($userid, $serviceid) {
 */
 function removeService($userid, $serviceid) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -204,6 +209,7 @@ function removeService($userid, $serviceid) {
 function getServices($userid) {
 	$sarray = array();
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -225,6 +231,7 @@ function getServices($userid) {
 */
 function addMovie($userid, $movieid) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -254,6 +261,7 @@ function addMovie($userid, $movieid) {
 */
 function removeMovie($userid, $movieid) {
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		sendLog('DB: Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -280,6 +288,7 @@ function removeMovie($userid, $movieid) {
 */
 function getMovies($userid) {
 	$sarray = array();
+	$usid = returnUser($userid, $logindb);
 	$logindb = databaseConnect();
 	if ($usid == NULL) {
 		sendLog('Problem getting userID');
@@ -343,6 +352,9 @@ function changeRating($userid, $movieid, $rating) {
 	return json_encode(array("returnCode" => '0', 'message' => "rating not changed"));
 }
 
+/*
+* Gets the rating and gives it to the webserver
+*/
 function getRating($userid, $movieid) {
 	$sarray = array();
 	$logindb = databaseConnect();

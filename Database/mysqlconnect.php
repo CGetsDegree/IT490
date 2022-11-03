@@ -1,17 +1,16 @@
 #!/usr/bin/php
 <?php
-require_once('../rpc/path.inc');
-require_once('../get_host_info.inc');
-require_once('../rabbitMQLib.inc');
+require_once('../rabbitFunctions.php');
 require_once('Connection.php');
 require_once('rFunctions.inc');
-include_once('../sendLog.php');
-
-echo SendToLogger("DB Server Startup");
+require_once('forumFunctions.inc');
 
 function requestProcessor($request)
 {
+  $response = '';
   echo "received request".PHP_EOL;
+  var_dump($request);
+  //$request = json_decode($request, true);
   var_dump($request);
   if(!isset($request['type']))
   {
@@ -43,13 +42,24 @@ function requestProcessor($request)
     	return changeRating($request['username'], $request['movieid'], $request['rating']);
     case "get_movie_rating":
     	return getRating($request['username'], $request['movieid']);
-    
+    case "get_forum_posts":
+    	return sendForumPosts($request['forumTopic']);
+    case "get_forum_topics":
+    	return sendForumTopics();
+    case "create_forum_topic":
+    	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
+    case "create_forum_post":
+    	return createForumPost($request['username'], $request['postText'], $request['forumTopic']);
+    case "search":
+    	$response = sendAPI($request);
+    	var_dump($response);
+    	return $response;
   }
-  return json_encode(array("returnCode" => '0', 'message'=>"Server received request and processed"));
+  return json_encode(array("returnCode" => '0', 'message'=>"Server message recieved but type not defined"));
 }
 
 
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
-echo "server started";
+echo "server started".PHP_EOL;
 $server->process_requests('requestProcessor');
 ?>
