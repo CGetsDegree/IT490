@@ -13,11 +13,12 @@ function sendForumPosts($forumTopic) {
 	//$ownerArray = array();
 	$logindb = databaseConnect();
 	$ft = $logindb->real_escape_string($forumTopic);
-	$query = "select * from forum_post where topicId = 'forumTopic'";
+	$query = "select * from forum_post, forum_topics where forumId = $forumTopic and topicId = $forumTopic";
 	$select = $logindb->query($query);
 	while($row = $select->fetch_assoc()) {
-		if($row["topicId"] == $forumTopic) {
-			array_push($sparray, $row["postId"]);
+		$title = $row["topicTitle"];
+		if($row["forumId"] == $forumTopic) {
+			$sparray[] = $row["postId"];
 			array_push($sparray, $row["postText"]);
 			array_push($sparray, $row["postCreateTime"]);
 			array_push($sparray, $row["postOwner"]);
@@ -25,7 +26,8 @@ function sendForumPosts($forumTopic) {
 			unset($sparray);
 		}
 	}
-	return json_encode(array("returnCode" => '1', 'message' => "forum post array created", 'forumArray'=>$forumarray));//, 'postTextArray'=>$textArray, 'postTimeArray'=>$timeArray, 'postOwnerArray'=>$ownerArray);	
+	return json_encode(array("returnCode" => '1', 'message' => "forum post array created", 'forumArray'=>$forumarray, 'forumTitle'=>$title));
+	//, 'postTextArray'=>$textArray, 'postTimeArray'=>$timeArray, 'postOwnerArray'=>$ownerArray);	
 }
 
 /*

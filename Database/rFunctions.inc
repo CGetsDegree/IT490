@@ -303,7 +303,7 @@ function getMovies($userid) {
 		}
 	}
 	sendLog('Movie list generated successful');
-	return json_encode(array("returnCode" => '1', 'message' => "movie list made successful", 'serviceArray'=>$sarray)); //returns an array of movies in the list.
+	return json_encode(array("returnCode" => '1', 'message' => "movie list made successful", 'movieArray'=>$sarray)); //returns an array of movies in the list.
 }
 
 /*

@@ -9,7 +9,6 @@ function requestProcessor($request)
 {
   $response = '';
   echo "received request".PHP_EOL;
-  var_dump($request);
   //$request = json_decode($request, true);
   var_dump($request);
   if(!isset($request['type']))
@@ -49,11 +48,24 @@ function requestProcessor($request)
     case "create_forum_topic":
     	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
     case "create_forum_post":
-    	return createForumPost($request['username'], $request['postText'], $request['forumTopic']);
+    	return createForumPost($request['username'], $request['postText'], $request['topic_id']);
     case "search":
     	$response = sendAPI($request);
     	var_dump($response);
     	return $response;
+    case "get_movie_details":
+	$response = sendAPI($request);
+    	var_dump($response);
+    	return $response;
+    case "get_movie_titles":
+	$response = sendAPI($request);
+    	var_dump($response);
+    	return $response;
+    case "get_service_titles":
+    	$response = sendAPI($request);
+    	var_dump($response);
+    	return $response;
+    
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server message recieved but type not defined"));
 }
@@ -62,4 +74,5 @@ function requestProcessor($request)
 $server = new rabbitMQServer("testRabbitMQ.ini","testServer");
 echo "server started".PHP_EOL;
 $server->process_requests('requestProcessor');
+exit();
 ?>
