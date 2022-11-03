@@ -145,8 +145,8 @@ function searchMovies($query, $page=1){
 			"genres"=>$details["genres"],
 			"production_companies"=>$details["production_companies"]); 
 	}
-	//var_dump($response);
-	return json_encode($info);
+	//var_dump($info);
+	return json_encode($info,JSON_FORCE_OBJECT);
 }
 
 function displayWatchlist($movies = array()){

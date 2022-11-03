@@ -1,20 +1,21 @@
 <?php
 require_once("rabbitFunctions.php");
-$request = array("type"=>"listPosts");
-$response = sendDB(json_encode($request));
+$request = array("type"=>"get_forum_topics");
+$response = sendDB($request);
 $response = json_decode($response, true);
+//var_dump($response);
 $display_block = "
 	<table cellpadding=3 cellspacing=1 border=1>
 	<tr>
 	<th>POST TITLE</th>
 	<th>Number of Comments</th>
 	</tr>";
-foreach($response as $post){
-	$post_id = $post["topic_id"];
-	$post_title = $post["topic_title"];
-	$post_create_time = $post["topic_create_time"];
-	$post_owner = $post["topic_owner"];
-	$num_comments = $post["num_posts"];
+foreach($response["forumArray"] as $post){
+	$post_id = $post[0];
+	$post_title = $post[1];
+	$post_create_time = $post[2];
+	$post_owner = $post[3];
+	$num_comments = $post[4];
 	
 	$display_block .= "
 		<tr>

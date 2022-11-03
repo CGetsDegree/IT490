@@ -51,5 +51,3 @@ $server->process_requests('requestProcessor');
 echo "Server shut down".PHP_EOL;
 exit();
 ?>
-
-?>
