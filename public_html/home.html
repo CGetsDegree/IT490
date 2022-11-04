@@ -37,7 +37,7 @@
 	}
 	validateSession();
 	function goToProfile(){
-		location.href="profile.html?u="+encodeURIComponent(username);
+		location.href="profile.php?u="+encodeURIComponent(username);
 	}
 	async function logout(){
 		sessiondata.delete("type");
