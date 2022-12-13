@@ -56,12 +56,15 @@ function validateLogin($username,$password)
 * Creates a new profile and checks to see if username is taken already.
 * Puts the profile in the table users.
 */		
-function validateRegister($username,$password)
+function validateRegister($username,$password, $email)
 	{
+		$fcchecker = false;
 		$logindb = databaseConnect();
 		$un = $logindb->real_escape_string($username);
+		$em = $logindb->real_escape_string($email);
 		$pw = $logindb->real_escape_string($password);
-		$statement = "select * from users where username = '$un'";
+		$fc = $logindb->real_escape_string(rand(100000, 99999999));
+		$statement = "select * from users where username = '$un' AND email = '$em'";
 		$response = $logindb->query($statement);
 
 		while ($row = $response->fetch_assoc())
@@ -73,8 +76,24 @@ function validateRegister($username,$password)
 				sendLog('Register: Username is already in use');
 				return json_encode(array("returnCode" => '0', 'message'=>"Username already exist try again")); //username is already being used 
 			}
+			if ($row["email"] == $em)
+			{
+				sendLog('Register: Email is already in use');
+				return json_encode(array("returnCode" => '0', 'message'=>"Email already exist try again"));
+			}
 		}
-		$insert = "insert into users values(0, '$un', '$pw')"; //creates a new user and password in users table
+		while ($fcchecker == false) {
+			while ($row = $response->fetch_assoc()) 
+			{
+				if ($row["friend_code"] == $fc)
+				{
+					$fc = $logindb->real_escape_string(rand(100000, 99999999));
+					break;
+				}
+			}
+			$fcchecker = true;
+		}
+		$insert = "insert into users values(0, '$un', '$pw', '$fc', '$em')"; //creates a new user and password in users table
 		if ($logindb->query($insert) === TRUE) { //check to make sure it worked
 			sendLog('Register: Username and passwords accepted');
 			return json_encode(array("returnCode" => '1', 'message'=>"Username and password accepted")); //returns that it worked to user

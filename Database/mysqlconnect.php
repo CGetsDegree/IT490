@@ -24,7 +24,7 @@ function requestProcessor($request)
     case "logout":
       return stopSession($request['sessionid']);
     case "register":
-    	return validateRegister($request['username'],$request['password']);
+    	return validateRegister($request['username'],$request['password'], $request['email']);
     case "add_service_list":
     	return addServices($request['username'], $request['serviceid']);
     case "remove_service_list":
@@ -50,10 +50,11 @@ function requestProcessor($request)
     case "create_forum_post":
     	return createForumPost($request['username'], $request['postText'], $request['topic_id']);
     case "search":
+    	echo "searching";
     	$response = sendAPI($request);
-    	var_dump($response);
     	return $response;
     case "get_movie_details":
+    	echo "details";
 	$response = sendAPI($request);
     	var_dump($response);
     	return $response;
