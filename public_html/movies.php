@@ -14,9 +14,8 @@ if ($_POST){
 	$request['page']=$_POST["page"];
       }
      else if ($rtype=="add_movie_list"){
-	      $movies=array();
-	      $movies=json_decode($_POST["movies"]);
-	      $request["movies"]=$movies;
+	     $request["movieid"]=$_POST["movie_id"];
+	     $request["title"]=$_POST["title"];
      }
      else if ($rtype=="change_movie_rating"){
 	     $request["movieid"]=$_POST["movie_id"];

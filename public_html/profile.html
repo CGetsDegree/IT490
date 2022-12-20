@@ -6,12 +6,8 @@
 	<body onload="onLoad()">
 	<div id="fc"></div>
 	<button onclick="loadMovies()">Watchlist</button>
-	<button onclick="loadServices()">Services</button>
 	<div id="watchlistdiv"><ul id="watchtbl"></ul></div>
 	<div id="servicediv"><ul id="servicetbl"></ul></div>
-	<div id="friendiv">
-		<br>Friends<br>
-		<ul id="friendtbl"></ul></div>
 	</body>
 </html>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
@@ -42,12 +38,6 @@ async function onLoad(){
 	if (userinfo.friend_code!=""){
 		fc.innerHTML="Your Friend Code is: "+userinfo.friend_code+"<br>Only share your friend code with people you trust!";
 	}
-	const friends=await getUserFriends();
-	console.log(friends);
-	let friendtbl=document.querySelector("#friendtbl");
-	for (record in friends){
-		friendtbl.innerHTML+="<li>"+friends[record]+"</li>";
-	}
 }
 async function getUserFriends(){
 	let fd=new FormData();
@@ -70,11 +60,15 @@ async function getUserMovies(){
 		async function loadMovies(){
 			const movielist=await getUserMovies();
 			console.log(movielist);
-			for (var record in movielist){
+			for (var record in movielist.movieArray){
 				watch.innerHTML+=
-					'<li id="'+movielist[record].id+'"><image class="poster" url="'+movielist[record].poster+'">'+
-                                        movielist[record].title+movielist[record].release_date+movielist[record].production_companies[0].name+
-					'<a href="movieDetail.php?id='+movielist[record].id+'">See more details</a>'+movielist[record].id+'></li>';
+					'<li id="'
+					+movielist.movieArray[record].id+
+					'">'+
+                                        movielist.movieArray[record].title+
+					'<a href="movieDetail.php?id='
+					+movielist.movieArray[record].id+
+					'">See more details</a></li>';
 			}
 		}
 async function getUserServices(){

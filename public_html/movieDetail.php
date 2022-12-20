@@ -61,6 +61,9 @@ $display_block.="<table><th><strong>Streaming on</strong></th><tr><td>$streaming
 <option value=5>5</option>
 </select>
 </tr>
+<tr>
+<button id="addtowatchlist" onclick="addToWatchlist()">Add to Watchlist</button>
+</tr>
 </table>
 </body>
 </html>
@@ -109,4 +112,29 @@ async function send_rating(fd){
 		return error;
 	}
 }
+async function addToWatchlist(){
+        const sessionid="<?php echo $_COOKIE["sessionid"]?>";
+        const username="<?php echo $_COOKIE["username"]?>";
+        const movie_id=<?php echo $_GET["id"]?>;
+        let fd=new FormData();
+        fd.append("username",username);
+        fd.append("type","add_movie_list");
+	fd.append("movie_id",movie_id);
+	fd.append("title",<?php echo $title?>);
+        console.log(sel.value);
+        const result=await send_movies(fd);
+        console.log(result);
+}
+async function send_movies(fd){
+        try{
+        const res=await fetch("movies.php",{
+        method:"POST",
+        body:fd});
+        return res.data;
+        }
+        catch(error){
+                return error;
+        }
+}
+
 </script>
