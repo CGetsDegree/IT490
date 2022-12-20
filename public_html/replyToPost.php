@@ -11,7 +11,7 @@
 <textarea name="reply_text" rows=8 cols=40 wrap=virtual></textarea>
 
 <input type="hidden" name="op" value="addpost">
-<input type="hidden" name="topic_id" value=$id">
+<input type="hidden" name="topic_id" value=<?php echo $_GET["topic_id"]; ?>>
 
 <P><input type="submit" name="submit" value="Add Reply"></p>
 
@@ -25,12 +25,15 @@ require_once("rabbitFunctions.php");
 //var_dump($response);
 //$response = json_decode($response,true);
 //$title = $response["forumTitle"];
-$id = $_GET["topic_id"];
+//$id = $_GET["topic_id"];
+//var_dump($id);
 if(isset($_POST["reply_text"])){
-	$replyRequest = array("type"=>"create_forum_post", "username"=>$_COOKIE["username"], "topic_id"=>$id, "postText"=>$_POST["reply_text"]);
+	//var_dump($id);
+	$replyRequest = array("type"=>"create_forum_post", "username"=>$_COOKIE["username"], "topic_id"=>$_POST["topic_id"], "postText"=>$_POST["reply_text"]);
+	var_dump($replyRequest);
 	$response = sendDB($replyRequest);
 	var_dump($response);
-	header("Location: showTopic.php?topic_id=$id");
+	header("Location: displayPosts.php");
 	exit();
 }
 ?>
