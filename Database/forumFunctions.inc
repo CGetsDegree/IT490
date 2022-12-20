@@ -85,6 +85,7 @@ function createForumTopic($username, $forumName, $postText) {
 * creates a forum post in database
 */
 function createForumPost($username, $postText, $forumID) {
+	echo $forumID;
 	$logindb = databaseConnect();
 	$uid = $logindb->real_escape_string($username);
 	$fid = $logindb->real_escape_string($forumID);

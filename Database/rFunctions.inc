@@ -56,12 +56,15 @@ function validateLogin($username,$password)
 * Creates a new profile and checks to see if username is taken already.
 * Puts the profile in the table users.
 */		
-function validateRegister($username,$password)
+function validateRegister($username,$password, $email)
 	{
+		$fcchecker = false;
 		$logindb = databaseConnect();
 		$un = $logindb->real_escape_string($username);
+		$em = $logindb->real_escape_string($email);
 		$pw = $logindb->real_escape_string($password);
-		$statement = "select * from users where username = '$un'";
+		$fc = $logindb->real_escape_string(rand(100000, 99999999));
+		$statement = "select * from users where username = '$un' AND email = '$em'";
 		$response = $logindb->query($statement);
 
 		while ($row = $response->fetch_assoc())
@@ -73,8 +76,24 @@ function validateRegister($username,$password)
 				sendLog('Register: Username is already in use');
 				return json_encode(array("returnCode" => '0', 'message'=>"Username already exist try again")); //username is already being used 
 			}
+			if ($row["email"] == $em)
+			{
+				sendLog('Register: Email is already in use');
+				return json_encode(array("returnCode" => '0', 'message'=>"Email already exist try again"));
+			}
 		}
-		$insert = "insert into users values(0, '$un', '$pw')"; //creates a new user and password in users table
+		while ($fcchecker == false) {
+			while ($row = $response->fetch_assoc()) 
+			{
+				if ($row["friend_code"] == $fc)
+				{
+					$fc = $logindb->real_escape_string(rand(100000, 99999999));
+					break;
+				}
+			}
+			$fcchecker = true;
+		}
+		$insert = "insert into users values(0, '$un', '$pw', '$fc', '$em')"; //creates a new user and password in users table
 		if ($logindb->query($insert) === TRUE) { //check to make sure it worked
 			sendLog('Register: Username and passwords accepted');
 			return json_encode(array("returnCode" => '1', 'message'=>"Username and password accepted")); //returns that it worked to user
@@ -288,8 +307,8 @@ function removeMovie($userid, $movieid) {
 */
 function getMovies($userid) {
 	$sarray = array();
-	$usid = returnUser($userid, $logindb);
 	$logindb = databaseConnect();
+	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
 		sendLog('Problem getting userID');
 		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
@@ -382,4 +401,62 @@ function getRating($userid, $movieid) {
 	sendLog('Failed to return rating');
 	return json_encode(array("returnCode" => '0', 'message' => "failed to get a rating", 'serviceArray'=>$sarray)); 
 }
+
+/* 
+* Returns the users info for profile
+*/
+function getUserInfo($username) {
+	$logindb = databaseConnect();
+	$uid = $logindb->real_escape_string($username);
+	$query = "select friend_code, email from users where username = '$uid'";
+	$select = $logindb->query($query);
+	while ($row = $select->fetch_assoc()) {
+		return json_encode(array("returnCode" => '1', 'message' => "profile returned", 'friend_code'=>$row["friend_code"], 'email'=>$row['email'])); //returns the rating for the movie
+		}
+	sendLog('Failed to return profile');
+	return json_encode(array("returnCode" => '0', 'message' => "failed to get profile")); 
+}
+
+function addFriend($username, $friendcode) {
+	$fid;
+	$logindb = databaseConnect();
+	$usid = returnUser($username, $logindb);
+	if ($usid == NULL) {
+		sendLog('Problem getting userID');
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$fc = $logindb->real_escape_string($friendcode);
+	$query = "select username from users where friend_code = '$fc'";
+	$select = $logindb->query($query);
+	while ($row = $select->fetch_assoc()) {
+		$fid = $row['username'];
+	}
+	$insert = "insert into friends_list values('$usid', '$fid')";
+	if ($logindb->query($insert) === TRUE) {
+		sendLog('Added to Friendslist');
+		return json_encode(array("returnCode" => '1', 'message' => "successful addition"));
+	}
+	sendLog('Failed to send to friendlist');
+	return json_encode(array("returnCode" => '0', 'message' => "problem adding friend"));
+}
+function getFriends($username) {
+	$sarray = array();
+	$logindb = databaseConnect();
+	$usid = returnUser($username, $logindb);
+	if ($usid == NULL) {
+		sendLog('Problem getting userID');
+		echo "failure";
+		return json_encode(array("returnCode" => '0', 'message' => "problem getting user id"));
+	}
+	$query = "select * from friends_list where userid = '$usid'";
+	$select = $logindb->query($query);
+	while($row = $select->fetch_assoc()) {
+		array_push($sarray, $row['frienduser']);
+	}
+	sendlog("friendlist sent");
+	echo json_encode(array("returnCode" => '1', 'message' => "friends list sent and made", 'friendsArray'=>$sarray));
+	return json_encode(array("returnCode" => '1', 'message' => "friends list sent and made", 'friendsArray'=>$sarray));
+	
+}
+	
 ?>

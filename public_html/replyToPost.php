@@ -19,6 +19,7 @@
 </body>
 <?php
 require_once("rabbitFunctions.php");
+
 //var_dump($_GET["topic_id"]);
 //$request = array("type"=>"get_forum_posts", "forumTopic"=>$_GET["topic_id"]);
 //$response = sendDB($request);
@@ -27,6 +28,7 @@ require_once("rabbitFunctions.php");
 //$title = $response["forumTitle"];
 //$id = $_GET["topic_id"];
 //var_dump($id);
+
 if(isset($_POST["reply_text"])){
 	//var_dump($id);
 	$replyRequest = array("type"=>"create_forum_post", "username"=>$_COOKIE["username"], "topic_id"=>$_POST["topic_id"], "postText"=>$_POST["reply_text"]);
