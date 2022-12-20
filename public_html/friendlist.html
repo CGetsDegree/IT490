@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<meta charset="utf-8">
+<html>
+	<div class="navigation"><a href="home.html">Home</a></div>
+	<input type="number" name="fc" id="fc" required>
+	<button name="submit" id="submit" onclick="addFriend();">Add Friend</button>
+	<div id="oops">Input friend code</div>
+	<button name="showfriends" id="showfriends" onclick="showFriends();">Show Friend List</button>
+	<div id="friendiv"><ul id="friendtbl"></ul></div>
+</html>
+
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script>
+	const sessionid=("; "+document.cookie).split("; sessionid=").pop().split(";")[0];
+        const username=("; "+document.cookie).split("; username=").pop().split(";")[0];
+
+	async function addFriend(){
+		let fc=document.querySelector("#fc");
+		let oops=document.querySelector("#oops");
+		const result=await tryFriendAdd(fc.value);
+		console.log(result);
+		oops.innerText=result.message;
+	}
+
+	async function tryFriendAdd(fc){
+		console.log("Axios request started");
+		let fd=new FormData();
+		fd.append("session_id",sessionid);
+		fd.append("username",username);
+		fd.append("request_type","add_friend");
+		fd.append("friend_code",fc);
+
+		const res=await axios.post("friends.php",fd);
+		return res.data;
+	}
+async function getUserFriends(){
+        let fd=new FormData();
+        fd.append("sessionid",sessionid);
+        fd.append("username",username);
+        fd.append("requestType","get_friends");
+	console.log("Awaiting axios request");
+        const res=await axios.post("getuserinfo.php",fd);
+        return res.data;
+}
+async function showFriends(){
+	const friends=await getUserFriends();
+        console.log(friends);
+        let friendtbl=document.querySelector("#friendtbl");
+        for (var record in friends.friendsArray){
+                friendtbl.innerHTML+="<li>"+friends.friendsArray[record]+"</li>";
+        }
+}
+</script>

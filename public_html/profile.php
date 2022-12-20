@@ -24,6 +24,7 @@ $display_block .= "<th><strong>Services</strong></th><tr><td><strong>$servarr</s
 
 
 <html>
+<a href="home.html">Home</a>
 <head>
 Words
 <?php echo "Username: ".$_COOKIE["username"]; ?>
