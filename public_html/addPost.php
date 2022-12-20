@@ -19,6 +19,7 @@ var_dump($response);
 $msg = "<P> The <strong>$name</strong> topic has been created!</p>";
 ?>
 <html>
+<a href="home.html">Home</a>
 <head>
 <title>New Topic Added</title>
 </head>

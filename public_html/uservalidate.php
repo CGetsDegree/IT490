@@ -13,6 +13,9 @@ if ($_POST){
       $request['type'] = $rtype;
       $request['username'] = $username;
       $request['password'] = $password;
+      if (isset($_POST["email"])){
+	      $request["email"]=$_POST["email"];
+      }
       $response = $client->send_request($request);
       echo $response;
     }

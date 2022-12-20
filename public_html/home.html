@@ -4,7 +4,8 @@
 	<div class="navigation"></div>
 	<button name="watchlists" onclick="location.href='watchlist.html'">View or Create Watchlist</button>
 	<button name="favorites" action="favorites.html">Favorites</button>
-	<button name="profile" action="goToProfile()">Your Profile</button>
+	<button name="profile" onclick="location.href='profile.html'">Your Profile</button>
+	<button name="friends" onclick="location.href='friendlist.html'">Friend List</button>
 	<button name="forum" onclick="location.href='displayPosts.php'">Forum</button>
 	<button name="logout" onclick="logout()">Log Out</button>
 </html>
@@ -37,7 +38,7 @@
 	}
 	validateSession();
 	function goToProfile(){
-		location.href="profile.html?u="+encodeURIComponent(username);
+		location.href="profile.html";
 	}
 	async function logout(){
 		sessiondata.delete("type");

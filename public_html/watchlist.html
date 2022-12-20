@@ -69,10 +69,17 @@ async function dosearch(fd){
 			console.log(result);
                         for (var record in result){
                                 movielist.innerHTML+=
-                                        '<li id="'+result[record].id+'"><image class="poster" url="'+result[record].poster+'">'+
+                                        '<li id="'
+					+result[record].id+
+					'"><img class="poster" src="https://image.tmdb.org/t/p/w500'
+					+result[record].poster_path+
+					'">'+
                                         result[record].title+result[record].release_date+result[record].production_companies[0].name+
-                                        '<a href="movieDetail.php?id='+result[record].id+'">See more details</a>'+
-                                        '<input type="checkbox" value='+result[record].id+'>';
+                                        '<a href="movieDetail.php?id='
+					+result[record].id+
+					'">See more details</a><input type="checkbox" value='
+					+result[record].id+
+					'>';
 			}
 		pagenum.innerText=page;
 	}
