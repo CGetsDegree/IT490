@@ -32,9 +32,9 @@ function requestProcessor($request)
     case "get_service_list":
     	return getServices($request['username']);
     case "add_movie_list":
-    	return addServices($request['username'], $request['movieid']);
+    	return addMovies($request['username'], $request['movieid'], $request['movieTitle']);
     case "remove_movie_list":
-    	return removeServices($request['username'], $request['movieid']);
+    	return removeMovies($request['username'], $request['movieid']);
     case "get_movie_list":
     	return getMovies($request['username']);
     case "change_movie_rating":

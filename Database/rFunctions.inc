@@ -248,7 +248,7 @@ function getServices($userid) {
 /*
 * Adds a movie to the users list of services
 */
-function addMovie($userid, $movieid) {
+function addMovie($userid, $movieid, $movieTitle) {
 	$logindb = databaseConnect();
 	$usid = returnUser($userid, $logindb);
 	if ($usid == NULL) {
@@ -257,6 +257,7 @@ function addMovie($userid, $movieid) {
 	}
 	$uid = $logindb->real_escape_string($usid);
 	$mid = $logindb->real_escape_string($movieid);
+	$mt = $logindb->real_escape_string($movieTitle);
 	$query = "select * from watch_list where id = '$uid' and movieID = '$mid'";
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
@@ -265,7 +266,7 @@ function addMovie($userid, $movieid) {
 			return json_encode(array("returnCode" => '0', 'message' => "service already added"));
 		}
 	}
-	$insert = "insert into watch_list values('$uid', '$mid')";
+	$insert = "insert into watch_list values('$uid', '$mid', '$mt')";
 	if ($logindb->query($insert) === TRUE) {
 		sendLog('DB: Service successfully added');
 		return json_encode(array("returnCode" => '1', 'message' => "service successfully added"));
@@ -318,7 +319,7 @@ function getMovies($userid) {
 	$select = $logindb->query($query);
 	while ($row = $select->fetch_assoc()) {
 		if($row["id"] == $uid) {
-			array_push($sarray, $row["movieID"]);
+			array_push($sarray, array("title"=>$row["movieName"], "id"=>$row['movieid']));
 		}
 	}
 	sendLog('Movie list generated successful');
