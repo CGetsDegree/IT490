@@ -1,11 +1,97 @@
-
-<script>
-let userid=document.location.href.split("?u=")[1];
-console.log(userid);
-</script>
-
 <html>
-
-This is your profile page congratz.
-
+	<a href="home.html">Home</a>
+	<head>
+	<div id="profileheader">Loading user info...</div>
+	</head>
+	<body onload="onLoad()">
+	<div id="fc"></div>
+	<button onclick="loadMovies()">Watchlist</button>
+	<button onclick="loadServices()">Services</button>
+	<div id="watchlistdiv"><ul id="watchtbl"></ul></div>
+	<div id="servicediv"><ul id="servicetbl"></ul></div>
+	<div id="friendiv">
+		<br>Friends<br>
+		<ul id="friendtbl"></ul></div>
+	</body>
 </html>
+	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script>
+		const sessionid=('; '+document.cookie).split('; sessionid=').pop().split(';')[0];
+        const username=('; '+document.cookie).split('; username=').pop().split(';')[0];
+        console.log(sessionid);
+        console.log(username);
+	let uid=location.href.split("?u=")[1];
+	let uname_disp=document.querySelector("#profileheader");
+	let fc=document.querySelector("#fc");
+	let watch=document.querySelector("#watchtbl");
+	let services=document.querySelector("#servicetbl");
+	
+		async function getUserInfo(){
+                        let fd=new FormData();
+                        fd.append("user_id",uid);
+                        fd.append("sessionid",sessionid);
+                        fd.append("username",username);
+			fd.append("requestType","get_user_info");
+                        const res=await axios.post("getuserinfo.php",fd);
+			return res.data;
+		}
+async function onLoad(){
+	const userinfo=await getUserInfo();
+	console.log(userinfo);
+	uname_disp.innerText=username+"'s Page";
+	if (userinfo.friend_code!=""){
+		fc.innerHTML="Your Friend Code is: "+userinfo.friend_code+"<br>Only share your friend code with people you trust!";
+	}
+	const friends=await getUserFriends();
+	console.log(friends);
+	let friendtbl=document.querySelector("#friendtbl");
+	for (record in friends){
+		friendtbl.innerHTML+="<li>"+friends[record]+"</li>";
+	}
+}
+async function getUserFriends(){
+	let fd=new FormData();
+        fd.append("user_id",uid);
+        fd.append("sessionid",sessionid);
+        fd.append("username",username);
+        fd.append("requestType","get_friends");
+        const res=await axios.post("getuserinfo.php",fd);
+        return res.data;
+}
+async function getUserMovies(){
+	let fd=new FormData();
+	fd.append("user_id",uid);
+        fd.append("sessionid",sessionid);
+        fd.append("username",username);
+	fd.append("requestType","get_movie_list");
+        const res=await axios.post("getuserinfo.php",fd);
+        return res.data;
+}
+		async function loadMovies(){
+			const movielist=await getUserMovies();
+			console.log(movielist);
+			for (var record in movielist){
+				watch.innerHTML+=
+					'<li id="'+movielist[record].id+'"><image class="poster" url="'+movielist[record].poster+'">'+
+                                        movielist[record].title+movielist[record].release_date+movielist[record].production_companies[0].name+
+					'<a href="movieDetail.php?id='+movielist[record].id+'">See more details</a>'+movielist[record].id+'></li>';
+			}
+		}
+async function getUserServices(){
+        let fd=new FormData();
+        fd.append("user_id",uid);
+        fd.append("sessionid",sessionid);
+        fd.append("username",username);
+        fd.append("requestType","get_service_list");
+        const res=await axios.post("getuserinfo.php",fd);
+        return res.data;
+}
+		async function loadServices(){
+			const movielist=await getUserServices();
+                        console.log(movielist);
+                        for (var record in movelist){
+                                services.innerHTML+=
+                                        '<li ><image class="poster" url="'+movielist[record].logo+'">'+movielist[record].name+'></li>';
+                        }
+		}
+	</script>

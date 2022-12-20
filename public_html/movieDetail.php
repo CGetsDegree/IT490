@@ -27,6 +27,8 @@ foreach($response["cast"] as $key=>$val){
 $director = $response["director"];
 $producer = $response["producers"][0];
 $writer = $response["writers"][0];
+$poster=$response["poster_path"];
+$display_block .='<img class="poster" src="https://image.tmdb.org/t/p/w500$poster">';
 	$display_block .= "
 		<th>
 		<strong>$title</strong>
