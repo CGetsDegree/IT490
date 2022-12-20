@@ -18,12 +18,12 @@
 </body>
 <?php
 require_once("rabbitFunctions.php");
-//var_dump($_GET["topic_id"]);
-//$request = array("type"=>"get_forum_posts", "forumTopic"=>$_GET["topic_id"]);
-//$response = sendDB($request);
-//var_dump($response);
-//$response = json_decode($response,true);
-//$title = $response["forumTitle"];
+var_dump($_GET["topic_id"]);
+$request = array("type"=>"get_forum_posts", "forumTopic"=>$_GET["topic_id"]);
+$response = sendDB($request);
+var_dump($response);
+$response = json_decode($response,true);
+$title = $response["forumTitle"];
 $id = $_GET["topic_id"];
 if(isset($_POST["reply_text"])){
 	$replyRequest = array("type"=>"create_forum_post", "username"=>$_COOKIE["username"], "topic_id"=>$id, "postText"=>$_POST["reply_text"]);

@@ -49,6 +49,8 @@ function requestProcessor($request)
     	return createForumTopic($request['username'], $request['forumName'], $request['postText']);
     case "create_forum_post":
     	return createForumPost($request['username'], $request['postText'], $request['topic_id']);
+    case "get_user_info":
+    	return getUserInfo($request['username']);
     case "search":
     	echo "searching";
     	$response = sendAPI($request);
@@ -66,6 +68,10 @@ function requestProcessor($request)
     	$response = sendAPI($request);
     	var_dump($response);
     	return $response;
+    case "add_friend":
+    	return addFriend($request['username'], $request['friendcode']);
+    case "get_friends":
+    	return getFriends($request['username']);
     
   }
   return json_encode(array("returnCode" => '0', 'message'=>"Server message recieved but type not defined"));
